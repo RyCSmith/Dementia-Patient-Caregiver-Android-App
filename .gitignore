@@ -1,0 +1,15 @@
+DementiaApp/.gradle/
+DementiaApp/.idea/
+DementiaApp/build/
+DementiaApp/local.properties
+DementiaApp/DementiaApp.iml
+DementiaApp/gradle/
+DementiaApp/gradle.properties
+DementiaApp/gradlew
+DementiaApp/gradlew.bat
+DementiaApp/settings.gradle
+DementiaApp/app/app.iml
+DementiaApp/app/build/
+DementiaApp/app/libs/
+DementiaApp/app/proguard-rules.pro
+*.DS_Store

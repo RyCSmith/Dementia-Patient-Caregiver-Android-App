@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="dementiaapp.com.dementiaapp.SafezoneCreationActivity">
+    <item android:id="@+id/delete_all_safezones" android:title="Delete All Safezones"
+        android:orderInCategory="100" android:showAsAction="never" />
+</menu>

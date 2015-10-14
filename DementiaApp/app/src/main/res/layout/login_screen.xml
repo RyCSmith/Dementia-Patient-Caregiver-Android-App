@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="MemAid"
+            android:textSize="40sp"/>
+
+        <EditText
+            android:id="@+id/email_field"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Enter email address"/>
+
+        <EditText
+            android:id="@+id/password_field"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Enter password"
+            android:password="true" />
+
+        <EditText
+            android:id="@+id/patient_name_field"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Enter name of patient" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <EditText
+                android:layout_gravity="bottom"
+                android:id="@+id/caregiver_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="phone"
+                android:hint="Enter phone number of caregiver"
+                android:paddingRight="48dp" />
+
+            <IconTextView
+                android:id="@+id/question_tooltip"
+                android:layout_gravity="center_vertical|right"
+                android:layout_width="36dp"
+                android:gravity="center"
+                android:layout_height="36dp"
+                android:text="{fa-question}"
+                android:textSize="28dp" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="15dp"
+            android:textSize="15sp"
+            android:text="Please choose your role:"/>
+
+        <RadioGroup
+            android:id="@+id/user_type_radio_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:background="#FFFFFF"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/patient_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="Patient"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/caretaker_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:textSize="14sp"
+                    android:text="Caretaker" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:paddingLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/allow_location_tracking_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:lines="2"
+                android:text="Allow location tracking for wandering?"/>
+
+            <Switch
+                android:id="@+id/allow_location_tracking_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:checked="true"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start using application"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+</LinearLayout>

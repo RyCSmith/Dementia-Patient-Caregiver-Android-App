@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    tools:context="dementiaapp.com.dementiaapp.MenuActivity">
+
+    <TextView
+        android:id="@+id/menu_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Please choose what you would like to do:"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/play_game_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/menu_title"
+        android:layout_marginTop="24dp"
+        android:text="Play MemAid The Game"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/upload_stimulus_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/play_game_button"
+        android:layout_marginTop="24dp"
+        android:text="Upload Stimulus For Game"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/create_reminders_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/upload_stimulus_button"
+        android:layout_marginTop="24dp"
+        android:text="Create And Edit Reminders"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/track_location_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_reminders_button"
+        android:layout_marginTop="24dp"
+        android:text="Track Location of Patient"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/add_safezone_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/track_location_button"
+        android:layout_marginTop="24dp"
+        android:text="Add Safezone for Patient"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:text="Logout"
+        android:textSize="20sp"/>
+</RelativeLayout>
