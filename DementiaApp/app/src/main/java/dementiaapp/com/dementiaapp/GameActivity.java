@@ -70,7 +70,7 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View v) {
                 showBasicAlertDialog("How to play activity",
-                        "Click the mic to record your voice TBD");
+                        "Click the microphone button and then name the object in the image shown.");
             }
         });
 
