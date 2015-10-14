@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/upload_stimulus_button"
         android:layout_marginTop="24dp"
-        android:text="Create And Edit Reminders"
+        android:text="Create Reminders"
         android:textSize="20sp"/>
 
     <Button
