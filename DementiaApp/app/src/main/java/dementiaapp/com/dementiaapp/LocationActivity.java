@@ -60,10 +60,14 @@ public class LocationActivity extends Activity implements OnMapReadyCallback {
                 List<Marker> markers = new ArrayList<Marker>();
 
                 for (ParseObject location : locations) {
+                    ParseGeoPoint point = location.getParseGeoPoint("geopoint");
+                    String currentUserName = (String) ParseUser.getCurrentUser().get("patientName");
+                    String locationString = location.getCreatedAt().toString();
+
                     markers.add(map.addMarker(new MarkerOptions()
-                            .position(new LatLng(location.getParseGeoPoint("geopoint").getLatitude(), location.getParseGeoPoint("geopoint").getLongitude()))
+                            .position(new LatLng(point.getLatitude(), point.getLongitude()))
                             .title("Location tracked")
-                            .snippet(ParseUser.getCurrentUser().get("patientName") + " was here at " + location.getCreatedAt().toString())));
+                            .snippet(currentUserName + " was here at " + locationString)));
                 }
                 markers.add(map.addMarker(new MarkerOptions()
                         .position(new LatLng(37.7750, 122.4183))
@@ -84,8 +88,10 @@ public class LocationActivity extends Activity implements OnMapReadyCallback {
                     for (int i = 0; i < list.size() - 1; i++) {
                         ParseGeoPoint src = list.get(i).getParseGeoPoint("geopoint");
                         ParseGeoPoint dest = list.get(i + 1).getParseGeoPoint("geopoint");
+                        LatLng point1 = new LatLng(src.getLatitude(), src.getLongitude());
+                        LatLng point2 = new LatLng(dest.getLatitude(), dest.getLongitude());
                         Polyline line = map.addPolyline(new PolylineOptions()
-                                .add(new LatLng(src.getLatitude(), src.getLongitude()), new LatLng(dest.getLatitude(), dest.getLongitude()))
+                                .add(point1, point2)
                                 .width(4)
                                 .color(Color.BLUE).geodesic(true));
                     }
