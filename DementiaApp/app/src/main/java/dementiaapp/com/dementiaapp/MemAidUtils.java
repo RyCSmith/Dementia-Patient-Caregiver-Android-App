@@ -111,15 +111,4 @@ public class MemAidUtils {
         }
     }
 
-    public static boolean hasUserAllowedLocationTracking(Context context) {
-        return context.getSharedPreferences("MEMAID", Context.MODE_PRIVATE).getBoolean(Constants.LOCATION_TRACKING_APPROVED_KEY, false);
-    }
-
-    public static boolean hasLocationBeaconBeenActivated(Context context) {
-        return context.getSharedPreferences("MEMAID", Context.MODE_PRIVATE).getBoolean(Constants.LOCATION_BEACON_ACTIVATED_KEY, false);
-    }
-
-    public static boolean hasDebugLocationSettingTurnedOn(Context context) {
-        return context.getSharedPreferences("MEMAID", Context.MODE_PRIVATE).getBoolean(Constants.LOCATION_TRACKING_SETTING_KEY, true);
-    }
 }

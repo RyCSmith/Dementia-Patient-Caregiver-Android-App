@@ -20,10 +20,6 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 /**
  * Created by vishwa on 3/2/15.
@@ -61,43 +57,10 @@ public class LoginActivity extends Activity {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Switch locationTrackingSwitch = (Switch) findViewById(R.id.allow_location_tracking_switch);
-                    if (emailField.getText().toString().isEmpty()
-                            || passwordField.getText().toString().isEmpty()
-                            || patientNameField.getText().toString().isEmpty()) {
-                        showBasicAlertDialog("Error", "You left one of the three fields empty. Please enter your email, password, and the patient\'s name");
-                    } else if ((locationTrackingSwitch.isChecked() && caregiverPhoneNumber.getText().toString().isEmpty())) {
-                        showBasicAlertDialog("Error", "If you would like track the patient's location for wandering then you must include a phone number for notifications when the patient leaves their safe zone");
-                    } else {
-                        final ParseUser user = new ParseUser();
-                        user.setEmail(emailField.getText().toString());
-                        user.setPassword(passwordField.getText().toString());
-                        user.setUsername(emailField.getText().toString());
-                        user.put("patientName", patientNameField.getText().toString());
-
-                        user.signUpInBackground(new SignUpCallback() {
-
-                            @Override
-                            public void done(ParseException e) {
-                                if (e != null) {
-                                    user.logInInBackground(emailField.getText().toString(), passwordField.getText().toString(), new LogInCallback() {
-                                        @Override
-                                        public void done(ParseUser parseUser, ParseException e) {
-                                            if (e != null) {
-                                                String errorMessage = e.getMessage();
-                                                showBasicAlertDialog("Error ", errorMessage.substring(0, 1).toUpperCase() + errorMessage.substring(1));
-                                            } else {
-                                                handleSuccessfulLogin();
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    handleSuccessfulLogin();
-                                }
-                            }
-
-                        });
-                    }
+                    //this is where all logic takes place when loginButton is clicked
+                    //doesnt do anything now, just called handleSuccessfulLogin where details are stored
+                    //this would be a good place to switch to a user mode button
+                   handleSuccessfulLogin();
                 }
             });
         }
@@ -113,9 +76,6 @@ public class LoginActivity extends Activity {
         sharedPreferences.putString("PATIENT_NAME", ((EditText) findViewById(R.id.patient_name_field)).getText().toString());
         sharedPreferences.putString("CAREGIVER_PHONE_NUMBER", ((EditText) findViewById(R.id.patient_name_field)).getText().toString());
         sharedPreferences.commit();
-
-        Switch locationTrackingSwitch = (Switch) findViewById(R.id.allow_location_tracking_switch);
-        sharedPreferences.putBoolean(Constants.LOCATION_TRACKING_APPROVED_KEY, locationTrackingSwitch.isChecked());
         sharedPreferences.commit();
 
         openMenuActivity();

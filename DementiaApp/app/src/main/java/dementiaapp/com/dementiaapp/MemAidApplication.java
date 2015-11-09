@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.parse.Parse;
-
 import se.emilsjolander.sprinkles.Migration;
 import se.emilsjolander.sprinkles.Sprinkles;
 
@@ -14,71 +12,67 @@ import se.emilsjolander.sprinkles.Sprinkles;
  */
 public class MemAidApplication extends Application {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+        @Override
+        public void onCreate() {
+            super.onCreate();
 
-        Parse.enableLocalDatastore(this);
+            Sprinkles sprinkles = Sprinkles.init(getApplicationContext());
 
-        Parse.initialize(this, Credentials.PARSE_APPLICATION_ID, Credentials.PARSE_CLIENT_KEY);
+            sprinkles.addMigration(new Migration() {
+                @Override
+                protected void onPreMigrate() {
+                    // do nothing
+                }
 
-        Sprinkles sprinkles = Sprinkles.init(getApplicationContext());
+                @Override
+                protected void doMigration(SQLiteDatabase db) {
+                    db.execSQL(
+                            "CREATE TABLE Stimulus (" +
+                                    "id TEXT PRIMARY KEY," +
+                                    "type INTEGER," +
+                                    "question_filepath TEXT,"+
+                                    "possible_answers TEXT," +
+                                    "created_at INTEGER" +
+                                    ")"
+                    );
 
-        sprinkles.addMigration(new Migration() {
-            @Override
-            protected void onPreMigrate() {
-                // do nothing
-            }
+                    db.execSQL(
+                            "CREATE TABLE Score (" +
+                                    "id TEXT PRIMARY KEY," +
+                                    "score INTEGER" +
+                                    ")"
+                    );
 
-            @Override
-            protected void doMigration(SQLiteDatabase db) {
-                db.execSQL(
-                        "CREATE TABLE Stimulus (" +
-                                "id TEXT PRIMARY KEY," +
-                                "type INTEGER," +
-                                "question_filepath TEXT,"+
-                                "possible_answers TEXT," +
-                                "created_at INTEGER" +
-                                ")"
-                );
+                    db.execSQL(
+                            "CREATE TABLE Safezone (" +
+                                    "id TEXT PRIMARY KEY," +
+                                    "safezone_name TEXT," +
+                                    "latitude INTEGER," +
+                                    "longitude INTEGER," +
+                                    "score INTEGER" +
+                                    ")"
+                    );
+                }
 
-                db.execSQL(
-                        "CREATE TABLE Score (" +
-                                "id TEXT PRIMARY KEY," +
-                                "score INTEGER" +
-                                ")"
-                );
+                @Override
+                protected void onPostMigrate() {
+                    // do nothing
+                }
+            });
+        }
 
-                db.execSQL(
-                        "CREATE TABLE Safezone (" +
-                                "id TEXT PRIMARY KEY," +
-                                "safezone_name TEXT," +
-                                "latitude INTEGER," +
-                                "longitude INTEGER," +
-                                "score INTEGER" +
-                                ")"
-                );
-            }
+        /*
+         * Returns either 'patient' or 'caretaker' depending on the type of the user chosen at login
+         */
+        public String getUserType() {
+            return getSharedPreferences("MEMAID", Context.MODE_PRIVATE).getString("USER_TYPE", Constants.USER_TYPE_PATIENT);
+        }
 
-            @Override
-            protected void onPostMigrate() {
-                // do nothing
-            }
-        });
+        public String getPatientName() {
+            return getSharedPreferences("MEMAID", Context.MODE_PRIVATE).getString("PATIENT_NAME", "");
+        }
+
+        public String getCaregiverPhoneNumber() {
+            return getSharedPreferences("MEMAID", Context.MODE_PRIVATE).getString("CAREGIVER_PHONE_NUMBER", "");
+        }
     }
-
-    /*
-     * Returns either 'patient' or 'caretaker' depending on the type of the user chosen at login
-     */
-    public String getUserType() {
-        return getSharedPreferences("MEMAID", Context.MODE_PRIVATE).getString("USER_TYPE", Constants.USER_TYPE_PATIENT);
-    }
-
-    public String getPatientName() {
-        return getSharedPreferences("MEMAID", Context.MODE_PRIVATE).getString("PATIENT_NAME", "");
-    }
-
-    public String getCaregiverPhoneNumber() {
-        return getSharedPreferences("MEMAID", Context.MODE_PRIVATE).getString("CAREGIVER_PHONE_NUMBER", "");
-    }
-}
