@@ -9,44 +9,34 @@
     android:background="#302F30">
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/upload_stimulus_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:text="Start Application"
+        android:text="Upload Stimulus"
         android:background="#808080"
         android:elegantTextHeight="false"
         android:padding="10dp"
         android:textStyle="bold"
         android:fontFamily="serif"
-        android:textSize="30sp"
-        android:textColor="#E7BB66" />
+        android:textSize="35sp"
+        android:textColor="#E7BB66"
+        android:foreground="#fffd41" />
 
     <Button
-        android:id="@+id/quit_button"
+        android:id="@+id/logout_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/login_button"
+        android:layout_below="@id/upload_stimulus_button"
         android:layout_centerHorizontal="true"
-        android:text="Quit"
+        android:text="Logout"
         android:fontFamily="serif"
         android:padding="10dp"
         android:textStyle="bold"
         android:layout_marginTop="100dp"
         android:textSize="20sp"
         android:textColor="#E7BB66"
-        android:background="#808080"/>
-
-    <Button
-        android:id="@+id/admin_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Admin"
-        android:textSize="15sp"
-        android:textColor="#000000"
-        android:background="#302F30" />
+        android:background="#808080" />
 
 </RelativeLayout>

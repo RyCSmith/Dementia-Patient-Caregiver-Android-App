@@ -1,52 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp"
-    tools:context="dementiaapp.com.dementiaapp.MenuActivity">
-
-    <TextView
-        android:id="@+id/menu_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Please choose what you would like to do:"
-        android:textSize="20sp"/>
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:background="#302F30">
 
     <Button
         android:id="@+id/play_game_button"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/menu_title"
-        android:layout_marginTop="24dp"
-        android:text="Play MemAid The Game"
-        android:textSize="20sp"/>
-
-    <Button
-        android:id="@+id/upload_stimulus_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/play_game_button"
-        android:layout_marginTop="24dp"
-        android:text="Upload Stimulus For Game"
-        android:textSize="20sp"/>
-
-    <Button
-        android:id="@+id/create_reminders_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/upload_stimulus_button"
-        android:layout_marginTop="24dp"
-        android:text="Create Reminders"
-        android:textSize="20sp"/>
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:text="Play Game"
+        android:background="#808080"
+        android:elegantTextHeight="false"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:textSize="40sp"
+        android:textColor="#E7BB66"
+        android:foreground="#fffd41" />
 
     <Button
         android:id="@+id/logout_button"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
+        android:layout_below="@id/play_game_button"
+        android:layout_centerHorizontal="true"
         android:text="Logout"
-        android:textSize="20sp"/>
+        android:fontFamily="serif"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:layout_marginTop="100dp"
+        android:textSize="20sp"
+        android:textColor="#E7BB66"
+        android:background="#808080" />
+
 </RelativeLayout>

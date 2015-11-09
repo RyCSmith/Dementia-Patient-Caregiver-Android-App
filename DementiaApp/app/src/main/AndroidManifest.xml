@@ -42,14 +42,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".MainActivity"-->
+            <!--android:label="" >-->
+        <!--</activity>-->
         <activity
             android:name=".MenuActivity"
             android:label="@string/title_activity_menu" >
         </activity>
+        <activity android:name="MenuActivityAdmin" />
         <activity
             android:name=".GameActivity"
             android:label="Game" >
@@ -62,10 +63,10 @@
             android:name=".UploadPhotoWithNameActivity"
             android:label="@string/title_activity_upload_photo_with_audio" >
         </activity>
-        <activity
-            android:name=".RemindersActivity"
-            android:label="Reminders" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".RemindersActivity"-->
+            <!--android:label="Reminders" >-->
+        <!--</activity>-->
 
         <receiver
             android:name=".BootCompletedReceiver"
@@ -78,11 +79,11 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".ReminderAlarmService"
-            android:enabled="true"
-            android:exported="false" >
-        </service>
+        <!--<service-->
+            <!--android:name=".ReminderAlarmService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="false" >-->
+        <!--</service>-->
 
     </application>
 
