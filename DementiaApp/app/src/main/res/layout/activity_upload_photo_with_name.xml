@@ -57,23 +57,4 @@
         android:text="Take a New Photo"
         android:textSize="20sp"/>
 
-    <TextView
-        android:id="@+id/disabled_button_message"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:layout_below="@id/take_new_photo_button"
-        android:text="The button below will work after you pick a photo"
-        android:gravity="center"
-        android:textSize="15sp"/>
-
-    <Button
-        android:id="@+id/record_name_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/disabled_button_message"
-        android:text="Record the name of the person in the photo"
-        android:textSize="20sp"/>
-
 </RelativeLayout>

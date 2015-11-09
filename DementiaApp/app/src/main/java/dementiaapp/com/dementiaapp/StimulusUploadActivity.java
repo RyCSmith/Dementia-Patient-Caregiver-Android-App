@@ -35,71 +35,128 @@ import java.util.UUID;
 
 public class StimulusUploadActivity extends Activity {
 
-    private static final int REQUEST_CODE_SPEECH_RECOGNITION = 100;
-
-    private Button recordAudioResponseButton;
-    private Button playAudioStimulusButton;
-
-    private boolean hasRecordedAudioStimulus = false;
-    private String audioStimulusId;
-    private String audioFilePath;
-
-    private ArrayList<String> stimulusPossibilities;
+    private Button recordQuestionButton;
+    private Button recordAnswerButton;
+    private Button addPhotoButton;
+    private Button recordCorrectFeedbackButton;
+    private Button recordIncorrectFeedbackButton;
+    private Button saveButton;
+    private Button discardButton;
+    private String stimuliMainDir;
+    private String newStimulusFolderPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        stimuliMainDir = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+        String randomID = UUID.randomUUID().toString();
+        newStimulusFolderPath = stimuliMainDir + randomID;
+        File file = new File(newStimulusFolderPath);
+        file.mkdirs();
+
+
         setContentView(R.layout.activity_stimulus_upload);
 
-        final Button recordAudioStimulusButton = (Button) findViewById(R.id.record_audio_stimulus_button);
-        Button photoWithNameButton = (Button) findViewById(R.id.upload_photo_with_name_button);
-        playAudioStimulusButton = (Button) findViewById(R.id.play_audio_stimulus_button);
-        playAudioStimulusButton.setEnabled(false);
-        recordAudioResponseButton = (Button) findViewById(R.id.record_audio_answer_button);
-        recordAudioResponseButton.setEnabled(false);
+        //set up all Buttons
+        recordQuestionButton = (Button) findViewById(R.id.record_audio_stimulus_button);
+        addPhotoButton = (Button) findViewById(R.id.upload_photo_button);
+        recordAnswerButton = (Button) findViewById(R.id.record_audio_answer_button);
+        recordCorrectFeedbackButton = (Button) findViewById(R.id.record_correct_audio_answer_button);
+        recordIncorrectFeedbackButton = (Button) findViewById(R.id.record_incorrect_audio_answer_button);
+        saveButton = (Button) findViewById(R.id.save_button);
+        discardButton = (Button) findViewById(R.id.discard_button);
+        recordAnswerButton.setEnabled(false);
+        recordCorrectFeedbackButton.setEnabled(false);
+        recordIncorrectFeedbackButton.setEnabled(false);
+        addPhotoButton.setEnabled(false);
+        saveButton.setEnabled(false);
 
-        photoWithNameButton.setOnClickListener(new View.OnClickListener() {
+        //add listeners for each button
+        recordQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newFilePath;
+                if (newStimulusFolderPath.endsWith("/"))
+                    newFilePath = newStimulusFolderPath + "question" + ".mp3";
+                else
+                    newFilePath = newStimulusFolderPath + "/question" + ".mp3";
+                recordAudio(newFilePath, "question");
+                recordQuestionButton.setEnabled(false);
+                recordAnswerButton.setEnabled(true);
+            }
+        });
+
+        recordAnswerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newFilePath;
+                if (newStimulusFolderPath.endsWith("/"))
+                    newFilePath = newStimulusFolderPath + "answer" + ".mp3";
+                else
+                    newFilePath = newStimulusFolderPath + "/answer" + ".mp3";
+                recordAudio(newFilePath, "answer");
+                recordQuestionButton.setEnabled(false);
+                recordAnswerButton.setEnabled(false);
+                recordCorrectFeedbackButton.setEnabled(true);
+                recordIncorrectFeedbackButton.setEnabled(true);
+                addPhotoButton.setEnabled(true);
+                saveButton.setEnabled(true);
+            }
+        });
+
+        addPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(StimulusUploadActivity.this, UploadPhotoWithNameActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("newStimulusFolder", newStimulusFolderPath);
+                intent.putExtras(bundle);
                 startActivity(intent);
+                addPhotoButton.setEnabled(false);
             }
         });
 
-        recordAudioStimulusButton.setOnClickListener(new View.OnClickListener() {
+        recordCorrectFeedbackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                audioStimulusId = UUID.randomUUID().toString();
-                String filePath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/audio/";
-                File file = new File(filePath);
-                file.mkdirs();
-                filePath = filePath + audioStimulusId + ".mp3";
-                audioFilePath = filePath;
-                recordAudio(filePath, audioStimulusId);
+                String newFilePath;
+                if (newStimulusFolderPath.endsWith("/"))
+                    newFilePath = newStimulusFolderPath + "correctFeedback" + ".mp3";
+                else
+                    newFilePath = newStimulusFolderPath + "/correctFeedback" + ".mp3";
+                recordAudio(newFilePath, "correctFeedback");
+                recordCorrectFeedbackButton.setEnabled(false);
             }
         });
 
-        recordAudioResponseButton.setOnClickListener(new View.OnClickListener() {
+        recordIncorrectFeedbackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20);
-                try {
-                    startActivityForResult(intent, REQUEST_CODE_SPEECH_RECOGNITION);
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "YOUR DEVICE DOES NOT SUPPORT SPEECH RECOGNITION", Toast.LENGTH_LONG).show();
-                }
+                String newFilePath;
+                if (newStimulusFolderPath.endsWith("/"))
+                    newFilePath = newStimulusFolderPath + "incorrectFeedback" + ".mp3";
+                else
+                    newFilePath = newStimulusFolderPath + "/incorrectFeedback" + ".mp3";
+                recordAudio(newFilePath, "incorrectFeedback");
+                recordIncorrectFeedbackButton.setEnabled(false);
             }
         });
 
-        playAudioStimulusButton.setOnClickListener(new View.OnClickListener() {
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
+            }
+        });
 
-                MemAidUtils.playAudio(audioFilePath);
+        discardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(File file: new File(newStimulusFolderPath).listFiles())
+                    file.delete();
+                new File(newStimulusFolderPath).delete();
+                finish();
             }
         });
     }
@@ -126,9 +183,6 @@ public class StimulusUploadActivity extends Activity {
                 mProgressDialog.dismiss();
                 recorder.stop();
                 recorder.release();
-                hasRecordedAudioStimulus = true;
-                recordAudioResponseButton.setEnabled(true);
-                playAudioStimulusButton.setEnabled(true);
             }
         });
 
@@ -136,9 +190,6 @@ public class StimulusUploadActivity extends Activity {
             public void onCancel(DialogInterface p1) {
                 recorder.stop();
                 recorder.release();
-                hasRecordedAudioStimulus = true;
-                recordAudioResponseButton.setEnabled(true);
-                playAudioStimulusButton.setEnabled(true);
             }
         });
         recorder.start();
@@ -149,36 +200,6 @@ public class StimulusUploadActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE_SPEECH_RECOGNITION) {
-            if (resultCode == RESULT_OK && data != null) {
-                stimulusPossibilities = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                for(String recoginzedName: stimulusPossibilities) {
-                    Log.d("VISHWA", "Stimulus recorded:" + recoginzedName);
-                }
-                Log.d("VISHWA", "================================================================");
-
-                try {
-                    JSONObject possibleAnswers = new JSONObject();
-                    JSONArray possibilities = new JSONArray(stimulusPossibilities);
-                    Log.d("Vishwa", "stimulusPossibilities length = " + stimulusPossibilities.size());
-                    Log.d("Vishwa", "JSON possibilities = " + possibilities.join(","));
-
-                    possibleAnswers.put("possible_answers", possibilities);
-
-                    Stimulus stimulus = new Stimulus();
-                    stimulus.id = audioStimulusId;
-                    stimulus.type = Stimulus.TYPE_AUDIO;
-                    stimulus.questionFilepath = audioFilePath;
-                    stimulus.possibleAnswers = possibleAnswers.toString();
-                    stimulus.createdAt = new Date().getTime();
-                    stimulus.save();
-
-                    finish();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     @Override

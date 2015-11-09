@@ -1,13 +1,17 @@
 package dementiaapp.com.dementiaapp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,8 +40,8 @@ import java.util.UUID;
 
 
 public class UploadPhotoWithNameActivity extends Activity {
-
-    private Button recordNameButton;
+    private Button pickPhotoButton;
+    private Button takeNewPhotoButton;
 
     private static final int REQUEST_CODE_SPEECH_RECOGNITION = 100;
     private static final int REQUEST_CODE_PHOTO_SELECT = 101;
@@ -51,18 +55,18 @@ public class UploadPhotoWithNameActivity extends Activity {
     private String tempNewPhotoFilename;
     private Uri newPhotoUri;
     private boolean isTakingNewPhoto = false;
+    private String newStimulusFolderPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_photo_with_name);
+        //get the newStimulusFolderPath from the Bundle that was added
+        Bundle bundle = getIntent().getExtras();
+        newStimulusFolderPath = bundle.getString("newStimulusFolder");
 
-        Button pickPhotoButton = (Button) findViewById(R.id.pick_photo_from_phone_button);
-        Button takeNewPhotoButton = (Button) findViewById(R.id.take_new_photo_button);
-
-        recordNameButton = (Button) findViewById(R.id.record_name_button);
-
-        recordNameButton.setEnabled(false);
+        pickPhotoButton = (Button) findViewById(R.id.pick_photo_from_phone_button);
+        takeNewPhotoButton = (Button) findViewById(R.id.take_new_photo_button);
 
         pickPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,37 +97,30 @@ public class UploadPhotoWithNameActivity extends Activity {
                 }
             }
         });
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE_SPEECH_RECOGNITION) {
-            if (resultCode == RESULT_OK && data != null) {
-                stimulusPossibilities = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                for(String recoginzedName: stimulusPossibilities) {
-                    Log.d("VISHWA", "Stimulus recorded:" + recoginzedName);
+             if (requestCode == REQUEST_CODE_PHOTO_SELECT) {
+                if (resultCode == RESULT_OK) {
+                    Uri photoUri = data.getData();
+                    handlePhotoCompletion(photoUri);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Sorry, that photo could not be used, please use a different photo.", Toast.LENGTH_LONG).show();
                 }
-                Log.d("VISHWA", "================================================================");
-
-                if (photo != null) {
-                    saveBitmap(photo, absolutePathOfSelectedPhoto);
+            } else if (requestCode == REQUEST_CODE_TAKE_NEW_PHOTO) {
+                if (resultCode == RESULT_OK) {
+                    handlePhotoCompletion(newPhotoUri);
                 }
             }
-        } else if (requestCode == REQUEST_CODE_PHOTO_SELECT) {
-            if (resultCode == RESULT_OK) {
-                Uri photoUri = data.getData();
-                handlePhotoCompletion(photoUri);
-            } else {
-                Toast.makeText(getApplicationContext(), "Sorry, that photo could not be used, please use a different photo.", Toast.LENGTH_LONG).show();
-            }
-        } else if (requestCode == REQUEST_CODE_TAKE_NEW_PHOTO) {
-            if (resultCode == RESULT_OK) {
-                handlePhotoCompletion(newPhotoUri);
-            }
-        }
     }
+
+
+
+
 
     private void handlePhotoCompletion(Uri photoUri) {
         if (!isTakingNewPhoto) {
@@ -139,69 +136,27 @@ public class UploadPhotoWithNameActivity extends Activity {
         }
         photo = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
 
-        recordNameButton.setEnabled(true);
-        recordNameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20);
-                try {
-                    startActivityForResult(intent, REQUEST_CODE_SPEECH_RECOGNITION);
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "YOUR DEVICE DOES NOT SUPPORT SPEECH RECOGNITION", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        saveBitmap();
     }
 
-    private void saveBitmap(Bitmap photo, String originalPath) {
-        String externalPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath();
-
-        File file = new File(externalPath + "/MemAid/photo");
-        file.mkdirs();
-
-        String nameOfOriginalImageFile = new String();
-        if (originalPath.contains("/")) {
-            nameOfOriginalImageFile = originalPath.substring(originalPath.lastIndexOf('/'));
-        } else {
-            nameOfOriginalImageFile = originalPath;
-        }
-        String hashOfFileName = MemAidUtils.getMD5Hash(nameOfOriginalImageFile);
-        String filePath = externalPath + "/MemAid/photo/" + hashOfFileName;
+    private void saveBitmap() {
+        File file;
+        if (newStimulusFolderPath.endsWith("/"))
+            file = new File(newStimulusFolderPath + "photo.jpg");
+        else
+            file = new File(newStimulusFolderPath + "/photo.jpg");
 
         FileOutputStream out = null;
         try {
-            out = new FileOutputStream(filePath);
+            out = new FileOutputStream(file);
             photo.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 if (out != null) {
                     out.close();
-
-                    try {
-                        JSONObject possibleAnswers = new JSONObject();
-                        JSONArray possibilities = new JSONArray(stimulusPossibilities);
-                        Log.d("Vishwa", "stimulusPossibilities length = "+stimulusPossibilities.size());
-                        Log.d("Vishwa", "JSON possibilities = "+possibilities.join(","));
-
-                        possibleAnswers.put(Constants.STIMULUS_RESPONSE_JSON_KEY, possibilities);
-
-                        Stimulus stimulus = new Stimulus();
-                        stimulus.id = MemAidUtils.getMD5Hash(nameOfOriginalImageFile);
-                        stimulus.type = Stimulus.TYPE_IMAGE;
-                        stimulus.questionFilepath = filePath;
-                        stimulus.possibleAnswers = possibleAnswers.toString();
-                        stimulus.createdAt = new Date().getTime();
-                        stimulus.save();
-
-                        finish();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -239,4 +194,5 @@ public class UploadPhotoWithNameActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

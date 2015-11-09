@@ -10,8 +10,8 @@
         android:id="@+id/audio_stimulus_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Press the following button if you would like to upload an audio stimulus followed by its response:"
+        android:layout_marginTop="20dp"
+        android:text="Use the buttons below to create a new stimulus:"
         android:textSize="20sp"/>
 
     <Button
@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/audio_stimulus_title"
         android:layout_marginTop="20dp"
-        android:text="Start Recording Audio Stimulus"
-        android:textSize="20sp"/>
+        android:text="Record Audio Prompt (Question)"
+        android:textSize="14sp"/>
 
     <Button
         android:id="@+id/record_audio_answer_button"
@@ -29,34 +29,51 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/record_audio_stimulus_button"
         android:layout_marginTop="20dp"
-        android:text="Record The Correct Response To The Stimulus"
-        android:textSize="20sp"/>
+        android:text="Record Correct Response"
+        android:textSize="14sp"/>
 
     <Button
-        android:id="@+id/play_audio_stimulus_button"
+        android:id="@+id/record_correct_audio_answer_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/record_audio_answer_button"
         android:layout_marginTop="20dp"
-        android:text="Preview Recorded Audio Stimulus"
-        android:textSize="20sp"/>
-
-    <TextView
-        android:id="@+id/photo_with_name_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/play_audio_stimulus_button"
-        android:layout_marginTop="40dp"
-        android:text="Press the following button if you would like to upload a photo along with a name:"
-        android:textSize="20sp"/>
+        android:text="Record Feedback for Incorrect Response (optional)"
+        android:textSize="14sp"/>
 
     <Button
-        android:id="@+id/upload_photo_with_name_button"
+        android:id="@+id/record_incorrect_audio_answer_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/photo_with_name_title"
+        android:layout_below="@id/record_correct_audio_answer_button"
         android:layout_marginTop="20dp"
-        android:text="Upload Photo With Name"
-        android:textSize="20sp"/>
+        android:text="Record Feedback for Incorrect Response (optional)"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/upload_photo_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/record_incorrect_audio_answer_button"
+        android:layout_marginTop="20dp"
+        android:text="Upload Photo (optional)"
+        android:textSize="14sp"/>
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/upload_photo_button"
+        android:layout_marginTop="20dp"
+        android:text="Save Stimulus"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/discard_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/save_button"
+        android:layout_marginTop="20dp"
+        android:text="Discard"
+        android:textSize="14sp"/>
 
 </RelativeLayout>
