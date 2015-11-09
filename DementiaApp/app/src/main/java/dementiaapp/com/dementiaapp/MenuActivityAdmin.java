@@ -8,21 +8,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class MenuActivity extends Activity {
+public class MenuActivityAdmin extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
+        setContentView(R.layout.activity_menu_admin);
 
-        Button playGameButton = (Button) findViewById(R.id.play_game_button);
+
+        Button uploadStimulusButton = (Button) findViewById(R.id.upload_stimulus_button);
         Button logoutButton = (Button) findViewById(R.id.logout_button);
 
-        playGameButton.setOnClickListener(new View.OnClickListener() {
+        uploadStimulusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(MenuActivity.this, GameActivity.class);
+                intent.setClass(MenuActivityAdmin.this, StimulusUploadActivity.class);
                 startActivity(intent);
             }
         });
@@ -51,6 +52,7 @@ public class MenuActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
         return super.onOptionsItemSelected(item);
     }
 }
