@@ -60,7 +60,6 @@ public class GameActivity extends Activity {
 
         setContentView(R.layout.activity_game);
 
-        stimuhttp://bit.ly/mcit-ta-spring2016lusImage = (ImageView) findViewById(R.id.stimulus_image);
         stimulusAnswer = (TextView) findViewById(R.id.stimulus_answer);
         skipButton = (Button) findViewById(R.id.skip_button);
         micButton = (ImageView) findViewById(R.id.mic_button);
@@ -94,13 +93,13 @@ public class GameActivity extends Activity {
             switch (currentStimulus.type) {
                 case Stimulus.TYPE_AUDIO:
                     // DO SOMETHING FOR AUDIO STIMULI HERE
-                    stimulusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_audio));
-                    stimulusImage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            MemAidUtils.playAudio(currentStimulus.questionFilepath);
-                        }
-                    });
+//                    stimulusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_audio));
+//                    stimulusImage.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            MemAidUtils.playAudio(currentStimulus.questionFilepath);
+//                        }
+//                    });
                     break;
 
                 case Stimulus.TYPE_IMAGE:
