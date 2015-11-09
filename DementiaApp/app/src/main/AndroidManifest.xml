@@ -55,10 +55,6 @@
             android:label="Game" >
         </activity>
         <activity
-            android:name=".LocationActivity"
-            android:label="@string/title_activity_location" >
-        </activity>
-        <activity
             android:name=".StimulusUploadActivity"
             android:label="@string/title_activity_stimulus_upload" >
         </activity>
@@ -83,27 +79,11 @@
         </receiver>
 
         <service
-            android:name=".LocationBeaconService"
-            android:enabled="true"
-            android:exported="false" >
-        </service>
-
-        <receiver
-            android:name=".LocationAlarmReceiver"
-            android:enabled="true"
-            android:exported="false" >
-        </receiver>
-
-        <service
             android:name=".ReminderAlarmService"
             android:enabled="true"
             android:exported="false" >
         </service>
 
-        <activity
-            android:name=".SafezoneCreationActivity"
-            android:label="@string/title_activity_safezone_creation" >
-        </activity>
     </application>
 
 </manifest>

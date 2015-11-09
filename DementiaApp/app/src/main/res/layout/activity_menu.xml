@@ -42,24 +42,6 @@
         android:textSize="20sp"/>
 
     <Button
-        android:id="@+id/track_location_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/create_reminders_button"
-        android:layout_marginTop="24dp"
-        android:text="Track Location of Patient"
-        android:textSize="20sp"/>
-
-    <Button
-        android:id="@+id/add_safezone_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/track_location_button"
-        android:layout_marginTop="24dp"
-        android:text="Add Safezone for Patient"
-        android:textSize="20sp"/>
-
-    <Button
         android:id="@+id/logout_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
