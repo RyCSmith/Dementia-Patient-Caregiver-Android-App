@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -46,13 +48,14 @@ public class GameActivity extends Activity {
     private TextView score;
     private Button helpButton;
 
-    private List<Stimulus> stimulusList;
-    private Stimulus currentStimulus;
+    private List<newStimulus> stimulusList;
+    private newStimulus currentStimulus;
     private Score currentScoreObj;
 
-    private int stimulusOffset = 0;
+    private int currentStimulusIndex;
 
     private int currentScore = 0;
+    String photoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class GameActivity extends Activity {
 
         stimulusAnswer = (TextView) findViewById(R.id.stimulus_answer);
         skipButton = (Button) findViewById(R.id.skip_button);
+        stimulusImage = (ImageView) findViewById(R.id.stimulus_image);
         micButton = (ImageView) findViewById(R.id.mic_button);
         score = (TextView) findViewById(R.id.score);
         helpButton = (Button) findViewById(R.id.help_button);
@@ -85,75 +89,61 @@ public class GameActivity extends Activity {
         }
         updateScore();
 
-        stimulusList = Query.all(Stimulus.class).get().asList();
+        //folder containing all stimulus subfolders
+        String stimuliMainDirPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+        String defaultsFolderPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/defaults/";
+
+        File stimuliMainFolder = new File(stimuliMainDirPath);
+        File[] allStimuli = stimuliMainFolder.listFiles();
+
+        stimulusList = new ArrayList<>();
+
+        //create list of stimulus objects based on whether custom images or audio have been included
+        for (File stimulusFolder : allStimuli){
+            String fullPath = stimulusFolder.getAbsolutePath();
+            String stimulusName = fullPath.substring(fullPath.lastIndexOf("/stimuli/") + 8);
+            File[] stimulusParts = stimulusFolder.listFiles();
+            boolean containsIncorrectResponseAudio = false;
+            boolean containsCorrectResponseAudio = false;
+            boolean containsImage = false;
+
+            for (File part : stimulusParts){
+                if (part.getAbsolutePath().contains("photo")){
+                    containsImage = true;
+                    photoPath = part.getAbsolutePath();
+                }
+                if (part.getAbsolutePath().contains("incorrectFeedback")){
+                    containsIncorrectResponseAudio = true;
+                }
+                if (part.getAbsolutePath().contains("correctFeedback")){
+                    containsCorrectResponseAudio = true;
+                }
+            }
+
+            newStimulus stimulus = new newStimulus(fullPath, defaultsFolderPath, containsImage,
+                    containsIncorrectResponseAudio, containsCorrectResponseAudio);
+            stimulusList.add(stimulus);
+        }
 
         if (!stimulusList.isEmpty()) {
-            currentStimulus = stimulusList.get(0);
-
-            switch (currentStimulus.type) {
-                case Stimulus.TYPE_AUDIO:
-                    // DO SOMETHING FOR AUDIO STIMULI HERE
-//                    stimulusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_audio));
-//                    stimulusImage.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            MemAidUtils.playAudio(currentStimulus.questionFilepath);
-//                        }
-//                    });
-                    break;
-
-                case Stimulus.TYPE_IMAGE:
-                    Bitmap stimulusBitmap = BitmapFactory.decodeFile(currentStimulus.questionFilepath);
-                    stimulusImage.setImageBitmap(stimulusBitmap);
-                    stimulusImage.setOnClickListener(null);
-                    stimulusAnswer.setText(currentStimulus.possibleAnswers);
-                    break;
-            }
-
-            skipButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeStimulus();
-                }
-            });
-
-            micButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                    intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20);
-                    try {
-                        startActivityForResult(intent, REQUEST_CODE_SPEECH_RECOGNITION);
-                    } catch (ActivityNotFoundException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "YOUR DEVICE DOES NOT SUPPORT SPEECH RECOGNITION", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+            currentStimulusIndex = 0;
         }
-    }
+
+        displayCurrentStimulus();
+
+}
 
     private void changeStimulus() {
-        stimulusOffset++;
-        if (stimulusList != null && stimulusOffset < stimulusList.size()) {
-            currentStimulus = stimulusList.get(stimulusOffset);
-
-            if (currentStimulus.type == Stimulus.TYPE_IMAGE) {
-                Bitmap stimulusBitmap = BitmapFactory.decodeFile(currentStimulus.questionFilepath);
-                stimulusImage.setImageBitmap(stimulusBitmap);
-            } else {
-                stimulusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_audio));
-                stimulusImage.setOnClickListener(null);
-                stimulusImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MemAidUtils.playAudio(currentStimulus.questionFilepath);
-                    }
-                });
-            }
+        if (stimulusList == null || currentStimulusIndex >= stimulusList.size() - 1) {
+            displayNoMoreStimuli();
+        } else {
+            currentStimulusIndex++;
+            displayCurrentStimulus();
         }
     }
+
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -162,15 +152,7 @@ public class GameActivity extends Activity {
         if (requestCode == REQUEST_CODE_SPEECH_RECOGNITION) {
             if (resultCode == RESULT_OK && data != null) {
                 ArrayList<String> responses = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                Set<String> setOfPossibilities = new HashSet<String>();
-                try {
-                    JSONArray arr = (new JSONObject(currentStimulus.possibleAnswers)).optJSONArray(Constants.STIMULUS_RESPONSE_JSON_KEY);
-                    for (int i = 0; i < arr.length(); i++) {
-                        setOfPossibilities.add(arr.getString(i));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Set<String> setOfPossibilities = (Set<String>) currentStimulus.getPossibleCorrectAnswers();
 
                 boolean matchFound = false;
                 for(String response: responses) {
@@ -178,9 +160,11 @@ public class GameActivity extends Activity {
                         matchFound = true;
                         currentScore++;
                         updateScore();
-                        changeStimulus();
+                        if (currentStimulus.hasCustomCorrectResponseAudio()) {
+                            MemAidUtils.playAudio(currentStimulus.getOnCorrectResponseAudio());
+                        }
                         Toast.makeText(getApplicationContext(),"YOU GOT THE RIGHT ANSWER! CONGRATS!", Toast.LENGTH_LONG).show();
-                        break;
+                        changeStimulus();
                     }
                 }
 
@@ -190,17 +174,29 @@ public class GameActivity extends Activity {
                             int minimumEditDistance = getLevenshteinDistance(response, possibility);
                             if (minimumEditDistance <= 3) {
                                 currentScore++;
-                                changeStimulus();
-                                Log.d("VISHWA", "MATCH FOUND THROUGH EDIT DISTANCE:"+response+" with "+possibility+" and edit distance = "+minimumEditDistance);
-                                Toast.makeText(getApplicationContext(),"YOU GOT THE RIGHT ANSWER! CONGRATS!", Toast.LENGTH_LONG).show();
                                 updateScore();
+                                if (currentStimulus.hasCustomCorrectResponseAudio()) {
+                                    MemAidUtils.playAudio(currentStimulus.getOnCorrectResponseAudio());
+                                }
+                                Toast.makeText(getApplicationContext(),"YOU GOT THE RIGHT ANSWER! CONGRATS!", Toast.LENGTH_LONG).show();
+                                Log.d("VISHWA", "MATCH FOUND THROUGH EDIT DISTANCE:" + response + " with " + possibility + " and edit distance = " + minimumEditDistance);
+                                changeStimulus();
                             }
                         }
                     }
                 }
+
+                //didn't get the right answer--display message and play audio of correct answer
+                if (currentStimulus.hasCustomCorrectResponseAudio()) {
+                    MemAidUtils.playAudio(currentStimulus.getOnIncorrectResponseAudio());
+                } else{
+                    MemAidUtils.playAudio(currentStimulus.getCorrectAnswerAsAudio());
+                }
+                Toast.makeText(getApplicationContext(),"TOO BAD, YOU DIDN'T GET THAT ONE RIGHT. BETTER LUCK NEXT TIME!", Toast.LENGTH_LONG).show();
             }
         }
     }
+
 
     private void updateScore() {
         currentScoreObj.score = currentScore;
@@ -248,4 +244,49 @@ public class GameActivity extends Activity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    private void displayCurrentStimulus() {
+        currentStimulus = stimulusList.get(currentStimulusIndex);
+
+        if(currentStimulus.hasCustomImage()) {
+            Bitmap stimulusBitmap = BitmapFactory.decodeFile(currentStimulus.getStimulusImage());
+
+            if (stimulusBitmap == null){
+                int i = 0;
+            }
+            stimulusImage.setImageBitmap(stimulusBitmap);
+        }
+
+        //play audio prompt automatically
+        MemAidUtils.playAudio(currentStimulus.getAudioPrompt());
+
+        skipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeStimulus();
+            }
+        });
+
+        micButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20);
+                try {
+                    startActivityForResult(intent, REQUEST_CODE_SPEECH_RECOGNITION);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "YOUR DEVICE DOES NOT SUPPORT SPEECH RECOGNITION", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void displayNoMoreStimuli() {
+        Toast.makeText(getApplicationContext(), "SORRY, THERE ARE NO MORE MEMORY TESTS!", Toast.LENGTH_LONG).show();
+        skipButton.setEnabled(false);
+        micButton.setEnabled(false);
+    }
+
 }

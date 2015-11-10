@@ -104,18 +104,18 @@ public class UploadPhotoWithNameActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-             if (requestCode == REQUEST_CODE_PHOTO_SELECT) {
-                if (resultCode == RESULT_OK) {
-                    Uri photoUri = data.getData();
-                    handlePhotoCompletion(photoUri);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Sorry, that photo could not be used, please use a different photo.", Toast.LENGTH_LONG).show();
-                }
-            } else if (requestCode == REQUEST_CODE_TAKE_NEW_PHOTO) {
-                if (resultCode == RESULT_OK) {
-                    handlePhotoCompletion(newPhotoUri);
-                }
+        if (requestCode == REQUEST_CODE_PHOTO_SELECT) {
+            if (resultCode == RESULT_OK) {
+                Uri photoUri = data.getData();
+                handlePhotoCompletion(photoUri);
+            } else {
+                Toast.makeText(getApplicationContext(), "Sorry, that photo could not be used, please use a different photo.", Toast.LENGTH_LONG).show();
             }
+        } else if (requestCode == REQUEST_CODE_TAKE_NEW_PHOTO) {
+            if (resultCode == RESULT_OK) {
+                handlePhotoCompletion(newPhotoUri);
+            }
+        }
     }
 
 
