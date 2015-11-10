@@ -80,9 +80,9 @@
         </receiver>
 
         <!--<service-->
-            <!--android:name=".ReminderAlarmService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="false" >-->
+        <!--android:name=".ReminderAlarmService"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="false" >-->
         <!--</service>-->
 
     </application>
