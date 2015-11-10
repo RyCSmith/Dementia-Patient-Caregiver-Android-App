@@ -17,6 +17,7 @@ public class MenuActivityAdmin extends Activity {
 
 
         Button uploadStimulusButton = (Button) findViewById(R.id.upload_stimulus_button);
+        Button viewMetricsButton = (Button) findViewById(R.id.view_metrics_button);
         Button logoutButton = (Button) findViewById(R.id.logout_button);
 
         uploadStimulusButton.setOnClickListener(new View.OnClickListener() {
@@ -24,6 +25,15 @@ public class MenuActivityAdmin extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(MenuActivityAdmin.this, StimulusUploadActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        viewMetricsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(MenuActivityAdmin.this, ViewMetricsActivity.class);
                 startActivity(intent);
             }
         });
