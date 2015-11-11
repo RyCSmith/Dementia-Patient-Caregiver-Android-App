@@ -10,7 +10,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
- * Created by joshkessler on 11/9/15.
+ * Created by joshkessler on 11/9/15. Replaces preexisting Stimulus class that required database connection rather than local storage.
  */
 public class newStimulus {
     private String stimulusName;
