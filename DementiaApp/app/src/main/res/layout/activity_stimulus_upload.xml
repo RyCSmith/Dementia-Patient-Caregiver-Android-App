@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/record_audio_answer_button"
         android:layout_marginTop="20dp"
-        android:text="Record Feedback for Incorrect Response (optional)"
+        android:text="Record Feedback for Correct Response (optional)"
         android:textSize="14sp"
         android:background="#808080"
         android:fontFamily="serif"

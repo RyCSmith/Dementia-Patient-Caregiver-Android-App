@@ -61,8 +61,12 @@ public class StimulusUploadActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Get local directory on Android device that contains subfolders for all stimuli
         stimuliMainDir = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
         String randomID = UUID.randomUUID().toString();
+
+        //Create new subfolder for this stimulus.
         newStimulusFolderPath = stimuliMainDir + randomID;
         File file = new File(newStimulusFolderPath);
         file.mkdirs();
@@ -85,6 +89,8 @@ public class StimulusUploadActivity extends Activity {
         saveButton.setEnabled(false);
 
         //add listeners for each button
+
+        //Record a question
         recordQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +105,7 @@ public class StimulusUploadActivity extends Activity {
             }
         });
 
+        //Record the expected answer
         recordAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +116,8 @@ public class StimulusUploadActivity extends Activity {
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20);
                 intent.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR");
                 intent.putExtra("android.speech.extra.GET_AUDIO", true);
+
+                //Invoke speech recognition functionality
                 try {
                     startActivityForResult(intent, REQUEST_CODE_SPEECH_RECOGNITION);
                 } catch (ActivityNotFoundException e) {
@@ -118,6 +127,7 @@ public class StimulusUploadActivity extends Activity {
             }
         });
 
+        //Optionally allow user to upload a photo for this stimulus
         addPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +141,7 @@ public class StimulusUploadActivity extends Activity {
             }
         });
 
+        //Optionally allow user to record an audio message to play if game-player answers correctly.
         recordCorrectFeedbackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +155,7 @@ public class StimulusUploadActivity extends Activity {
             }
         });
 
+        //Optionally allow user to record an audio message to play if game-player answers incorrectly.
         recordIncorrectFeedbackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +187,7 @@ public class StimulusUploadActivity extends Activity {
         });
     }
 
+    //Invoked to record audio files and save them locally when speech recognition not required.
     public void recordAudio(String filePath, String fileName) {
         final MediaRecorder recorder = new MediaRecorder();
         ContentValues values = new ContentValues(3);
@@ -217,14 +230,20 @@ public class StimulusUploadActivity extends Activity {
         //Use speech recognition to generate list of possible acceptable response strings based on audio recording
         if (requestCode == REQUEST_CODE_SPEECH_RECOGNITION)
             if (resultCode == RESULT_OK && data != null) {
+
+                //Get list of strings generated from audio by speech recognition.
                 ArrayList<String> stimulusPossibilities = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
 
                 Bundle bundle = data.getExtras();
 
-                // the recording url is in getData:
+                // Speech recognition didn't seem to support recording and saving audio to a file, then
+                // using speech recognitio on it. Intsead, we can retrieve the audio we sent to the speech recognition
+                // from the data object.
                 Uri audioUri = data.getData();
                 ContentResolver contentResolver = getContentResolver();
+
+                //Read data from submitted audio file into a file we can save locally.
                 try {
                     InputStream filestream = contentResolver.openInputStream(audioUri);
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -253,6 +272,7 @@ public class StimulusUploadActivity extends Activity {
                     e.printStackTrace();
                 }
 
+                //Write strings from speech recognition to a file and save it locally.
                 File textFile;
                 if (newStimulusFolderPath.endsWith("/"))
                     textFile = new File(newStimulusFolderPath + "possibleAnswers" + ".txt");

@@ -92,6 +92,9 @@ public class GameActivity extends Activity {
 
         //folder containing all stimulus subfolders
         String stimuliMainDirPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+
+        //We thought about including default audio recordings for correct and incorrect answers, as well as question-specific ones.
+        //They were to reside in this folder.
         String defaultsFolderPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/defaults/";
 
         File stimuliMainFolder = new File(stimuliMainDirPath);
@@ -126,14 +129,15 @@ public class GameActivity extends Activity {
             stimulusList.add(stimulus);
         }
 
-        if (!stimulusList.isEmpty()) {
-            currentStimulusIndex = 0;
-        }
+        resetStimulus();
 
+        //immediately being playing game on launch
         displayCurrentStimulus();
 
 }
 
+    //Invoked either when user responds to a question or touches the skip button and either displays next stimulus
+    //or text indicating there are no more stimuli.
     private void changeStimulus() {
         if (stimulusList == null || currentStimulusIndex >= stimulusList.size() - 1) {
             displayNoMoreStimuli();
@@ -146,13 +150,18 @@ public class GameActivity extends Activity {
 
 
 
+    //Invoked after user has responded to a stimulus. Currently only supports responses via microphone
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_SPEECH_RECOGNITION) {
             if (resultCode == RESULT_OK && data != null) {
+
+                //List of strings that voice recognition matched to user's recorded answer.
                 ArrayList<String> responses = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                //List of strings that voice recognition matched to admin's recorded correct answer.
                 ArrayList<String> possibleAnswers = currentStimulus.getPossibleCorrectAnswers();
 
                 boolean matchFound = false;
@@ -161,6 +170,8 @@ public class GameActivity extends Activity {
                         matchFound = true;
                         currentScore++;
                         updateScore();
+
+                        //Tell user the answer was correct, and move onto next stimulus.
                         if (currentStimulus.hasCustomCorrectResponseAudio()) {
                             MemAidUtils.playAudio(currentStimulus.getOnCorrectResponseAudio());
                         }
@@ -172,6 +183,7 @@ public class GameActivity extends Activity {
                 if (!matchFound) {
                     for(String response: responses) {
                         for(String possibility: possibleAnswers) {
+                            //Exact match not found--check whether it was close and might be an issue of bad speech to text conversion
                             int minimumEditDistance = getLevenshteinDistance(response, possibility);
                             if (minimumEditDistance <= 3) {
                                 currentScore++;
@@ -205,6 +217,7 @@ public class GameActivity extends Activity {
         score.setText(currentScore + "");
     }
 
+    //Checks edit distance between two strings, i.e., how many letters would need to be changed to convert one string to another
     int getLevenshteinDistance(String s, String t) {
         int[] v0 = new int[t.length() + 1];
         int[] v1 = new int[t.length() + 1];
@@ -246,6 +259,7 @@ public class GameActivity extends Activity {
         dialog.show();
     }
 
+    //Play audio prompt and display stimulus image, if applicable
     private void displayCurrentStimulus() {
         currentStimulus = stimulusList.get(currentStimulusIndex);
 
@@ -261,6 +275,7 @@ public class GameActivity extends Activity {
         //play audio prompt automatically
         MemAidUtils.playAudio(currentStimulus.getAudioPrompt());
 
+        //Allow user to skip to next stimulus
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,12 +283,15 @@ public class GameActivity extends Activity {
             }
         });
 
+        //Allow user to record response to stimulus
         micButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20);
+
+                //Trigger speech recognition to validate user's response.
                 try {
                     startActivityForResult(intent, REQUEST_CODE_SPEECH_RECOGNITION);
                 } catch (ActivityNotFoundException e) {
@@ -284,10 +302,17 @@ public class GameActivity extends Activity {
         });
     }
 
+    //Function to be invoked when user has gone through all stimuli. Currently only displays a text pop-up, but should probably do more.
     private void displayNoMoreStimuli() {
         Toast.makeText(getApplicationContext(), "SORRY, THERE ARE NO MORE MEMORY TESTS!", Toast.LENGTH_LONG).show();
         skipButton.setEnabled(false);
         micButton.setEnabled(false);
+    }
+
+    public void resetStimulus(){
+        if (!stimulusList.isEmpty()) {
+            currentStimulusIndex = 0;
+        }
     }
 
 }
