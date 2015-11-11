@@ -129,9 +129,7 @@ public class GameActivity extends Activity {
             stimulusList.add(stimulus);
         }
 
-        if (!stimulusList.isEmpty()) {
-            currentStimulusIndex = 0;
-        }
+        resetStimulus();
 
         //immediately being playing game on launch
         displayCurrentStimulus();
@@ -309,6 +307,12 @@ public class GameActivity extends Activity {
         Toast.makeText(getApplicationContext(), "SORRY, THERE ARE NO MORE MEMORY TESTS!", Toast.LENGTH_LONG).show();
         skipButton.setEnabled(false);
         micButton.setEnabled(false);
+    }
+
+    public void resetStimulus(){
+        if (!stimulusList.isEmpty()) {
+            currentStimulusIndex = 0;
+        }
     }
 
 }
