@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="0"
+        android:text="NA"
         android:layout_below="@id/avg_score_text"
         android:textSize="20sp"
         android:fontFamily="serif"
@@ -74,7 +74,7 @@
         android:layout_marginTop="20dp"
         android:layout_below="@id/max_score_text"
         android:textSize="20sp"
-        android:text="0"
+        android:text="NA"
         android:fontFamily="serif"
         android:textStyle="bold"
         android:textColor="#E7BB66"/>
@@ -98,7 +98,7 @@
         android:layout_marginTop="20dp"
         android:layout_below="@id/min_score_text"
         android:textSize="20sp"
-        android:text="0"
+        android:text="NA"
         android:fontFamily="serif"
         android:textStyle="bold"
         android:textColor="#E7BB66"/>
