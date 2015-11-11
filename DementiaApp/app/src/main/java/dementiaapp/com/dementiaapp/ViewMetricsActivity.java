@@ -1,17 +1,18 @@
 package dementiaapp.com.dementiaapp;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import java.io.*;
+import java.util.ArrayList;
+import java.io.File;
 
 public class ViewMetricsActivity extends Activity {
+    ArrayList<Double> scores;
     Button backButton;
     TextView timesPlayed;
     TextView avgScore;
@@ -21,7 +22,7 @@ public class ViewMetricsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_admin);
+        setContentView(R.layout.activity_view_metrics);
 
         backButton = (Button) findViewById(R.id.back_button);
         timesPlayed = (TextView) findViewById(R.id.times_played_num);
@@ -35,30 +36,61 @@ public class ViewMetricsActivity extends Activity {
                 finish();
             }
         });
+
+        String filePath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/metrics.txt";
+        File metricsFilePath = new File(filePath);
+        if(metricsFilePath.exists()) {
+            getMetrics(filePath);
+        }
     }
 
-    protected void getMetrics() {
-        String metricsFilePath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/metrics.txt";
-
+    protected void getMetrics(String filePath) {
         try {
-            FileReader fileReader = new FileReader(metricsFilePath);
+            scores = new ArrayList<Double>();
+            FileReader fileReader = new FileReader(filePath);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String numTimes = bufferedReader.readLine(); //line 1
-            String avg = bufferedReader.readLine(); //line 2
-            String max = bufferedReader.readLine(); //line 3
-            String min = bufferedReader.readLine(); //line 4
+            String line = bufferedReader.readLine();
+            while(line != null) {
+                scores.add(Double.parseDouble(line));
+                line = bufferedReader.readLine();
+            }
             bufferedReader.close();
-
-            timesPlayed.setText(numTimes);
-            avgScore.setText(avg);
-            maxScore.setText(max);
-            minScore.setText(min);
+            timesPlayed.setText(scores.size() + "");
+            avgScore.setText(getAvgScore() + "");
+            maxScore.setText(getMaxScore() + "");
+            minScore.setText(getMinScore() + "");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    protected double getAvgScore() {
+        double avg = 0.0;
+        for(double score : scores) {
+            avg += score;
+        }
+        return avg / scores.size();
+    }
 
+    protected double getMaxScore() {
+        double max = 0.0;
+        for(double score : scores) {
+            if(score > max) {
+                max = score;
+            }
+        }
+        return max;
+    }
+
+    protected double getMinScore() {
+        double min = 100.0;
+        for(double score : scores) {
+            if(score < min) {
+                min = score;
+            }
+        }
+        return min;
     }
 }

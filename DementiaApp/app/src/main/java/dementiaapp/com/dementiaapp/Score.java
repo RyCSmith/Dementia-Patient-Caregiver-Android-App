@@ -18,6 +18,9 @@ public class Score extends Model {
     @Column("score")
     public int score;
 
+    @Column("incorrect")
+    public int incorrect;
+
     public String getId() {
         return id;
     }
