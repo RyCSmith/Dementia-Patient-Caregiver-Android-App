@@ -242,6 +242,7 @@ public class StimulusUploadActivity extends Activity {
                     } else {
                         audioFile = new File(newStimulusFolderPath + "/answer" + ".amr");
                     }
+                    audioFile.createNewFile();
 
 
                     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(audioFile));
@@ -252,16 +253,21 @@ public class StimulusUploadActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                File file;
+                File textFile;
                 if (newStimulusFolderPath.endsWith("/"))
-                    file = new File(newStimulusFolderPath + "possibleAnswers" + ".txt");
+                    textFile = new File(newStimulusFolderPath + "possibleAnswers" + ".txt");
                 else
-                    file = new File(newStimulusFolderPath + "/possibleAnswers" + ".txt");
+                    textFile = new File(newStimulusFolderPath + "/possibleAnswers" + ".txt");
+                try{
+                    textFile.createNewFile();
+                } catch(IOException e){
+                    e.printStackTrace();
+                }
 
                 PrintStream out = null;
 
                 try {
-                    out = new PrintStream(new FileOutputStream(file));
+                    out = new PrintStream(new FileOutputStream(textFile));
                     for (String possibleResponse : stimulusPossibilities) {
                         out.println(possibleResponse);
                     }

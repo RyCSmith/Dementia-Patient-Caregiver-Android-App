@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -152,11 +153,11 @@ public class GameActivity extends Activity {
         if (requestCode == REQUEST_CODE_SPEECH_RECOGNITION) {
             if (resultCode == RESULT_OK && data != null) {
                 ArrayList<String> responses = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                Set<String> setOfPossibilities = (Set<String>) currentStimulus.getPossibleCorrectAnswers();
+                ArrayList<String> possibleAnswers = currentStimulus.getPossibleCorrectAnswers();
 
                 boolean matchFound = false;
                 for(String response: responses) {
-                    if (setOfPossibilities.contains(response)) {
+                    if (possibleAnswers.contains(response)) {
                         matchFound = true;
                         currentScore++;
                         updateScore();
@@ -170,7 +171,7 @@ public class GameActivity extends Activity {
 
                 if (!matchFound) {
                     for(String response: responses) {
-                        for(String possibility: setOfPossibilities) {
+                        for(String possibility: possibleAnswers) {
                             int minimumEditDistance = getLevenshteinDistance(response, possibility);
                             if (minimumEditDistance <= 3) {
                                 currentScore++;
