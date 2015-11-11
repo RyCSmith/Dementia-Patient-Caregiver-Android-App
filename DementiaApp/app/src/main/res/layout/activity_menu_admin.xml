@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="16dp"
+    android:paddingTop="150dp"
     android:paddingBottom="16dp"
     android:background="#302F30">
 
@@ -12,7 +12,6 @@
         android:id="@+id/upload_stimulus_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:text="Upload Stimulus"
         android:background="#808080"
@@ -25,10 +24,27 @@
         android:foreground="#fffd41" />
 
     <Button
+        android:id="@+id/view_metrics_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="View Metrics"
+        android:background="#808080"
+        android:elegantTextHeight="false"
+        android:layout_below="@id/upload_stimulus_button"
+        android:layout_marginTop="100dp"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:textSize="35sp"
+        android:textColor="#E7BB66"
+        android:foreground="#fffd41" />
+
+    <Button
         android:id="@+id/logout_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/upload_stimulus_button"
+        android:layout_below="@id/view_metrics_button"
         android:layout_centerHorizontal="true"
         android:text="Logout"
         android:fontFamily="serif"

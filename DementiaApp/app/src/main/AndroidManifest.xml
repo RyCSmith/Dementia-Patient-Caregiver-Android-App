@@ -55,6 +55,7 @@
             android:name=".GameActivity"
             android:label="Game" >
         </activity>
+        <activity android:name="ViewMetricsActivity" />
         <activity
             android:name=".StimulusUploadActivity"
             android:label="@string/title_activity_stimulus_upload" >
