@@ -3,11 +3,14 @@ package dementiaapp.com.dementiaapp;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -26,8 +29,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -44,6 +56,7 @@ public class StimulusUploadActivity extends Activity {
     private Button discardButton;
     private String stimuliMainDir;
     private String newStimulusFolderPath;
+    private static final int REQUEST_CODE_SPEECH_RECOGNITION = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,18 +102,19 @@ public class StimulusUploadActivity extends Activity {
         recordAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newFilePath;
-                if (newStimulusFolderPath.endsWith("/"))
-                    newFilePath = newStimulusFolderPath + "answer" + ".mp3";
-                else
-                    newFilePath = newStimulusFolderPath + "/answer" + ".mp3";
-                recordAudio(newFilePath, "answer");
-                recordQuestionButton.setEnabled(false);
-                recordAnswerButton.setEnabled(false);
-                recordCorrectFeedbackButton.setEnabled(true);
-                recordIncorrectFeedbackButton.setEnabled(true);
-                addPhotoButton.setEnabled(true);
-                saveButton.setEnabled(true);
+
+
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20);
+                intent.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR");
+                intent.putExtra("android.speech.extra.GET_AUDIO", true);
+                try {
+                    startActivityForResult(intent, REQUEST_CODE_SPEECH_RECOGNITION);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "YOUR DEVICE DOES NOT SUPPORT SPEECH RECOGNITION", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -199,6 +213,82 @@ public class StimulusUploadActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        //Use speech recognition to generate list of possible acceptable response strings based on audio recording
+        if (requestCode == REQUEST_CODE_SPEECH_RECOGNITION)
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> stimulusPossibilities = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+
+                Bundle bundle = data.getExtras();
+
+                // the recording url is in getData:
+                Uri audioUri = data.getData();
+                ContentResolver contentResolver = getContentResolver();
+                try {
+                    InputStream filestream = contentResolver.openInputStream(audioUri);
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    int byteRead;
+                    byte[] dataRead = new byte[1024];
+                    while ((byteRead = filestream.read(dataRead)) != -1){
+                        out.write(dataRead, 0, byteRead);
+                    }
+                    filestream.close();
+
+
+                    File audioFile;
+                    if (newStimulusFolderPath.endsWith("/")) {
+                        audioFile = new File(newStimulusFolderPath + "answer" + ".amr");
+                    } else {
+                        audioFile = new File(newStimulusFolderPath + "/answer" + ".amr");
+                    }
+                    audioFile.createNewFile();
+
+
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(audioFile));
+                    out.writeTo(bos);
+                    bos.close();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                File textFile;
+                if (newStimulusFolderPath.endsWith("/"))
+                    textFile = new File(newStimulusFolderPath + "possibleAnswers" + ".txt");
+                else
+                    textFile = new File(newStimulusFolderPath + "/possibleAnswers" + ".txt");
+                try{
+                    textFile.createNewFile();
+                } catch(IOException e){
+                    e.printStackTrace();
+                }
+
+                PrintStream out = null;
+
+                try {
+                    out = new PrintStream(new FileOutputStream(textFile));
+                    for (String possibleResponse : stimulusPossibilities) {
+                        out.println(possibleResponse);
+                    }
+                    if (out.checkError()) {
+                    }
+
+                    if (out != null) {
+                        out.close();
+                    }
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    recordQuestionButton.setEnabled(false);
+                    recordAnswerButton.setEnabled(false);
+                    recordCorrectFeedbackButton.setEnabled(true);
+                    recordIncorrectFeedbackButton.setEnabled(true);
+                    addPhotoButton.setEnabled(true);
+                    saveButton.setEnabled(true);
+                }
+            }
 
     }
 
