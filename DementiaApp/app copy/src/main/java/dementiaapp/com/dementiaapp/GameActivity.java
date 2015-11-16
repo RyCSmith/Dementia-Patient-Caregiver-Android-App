@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.AlertDialog;
+import java.io.*;
 
 import com.google.android.gms.internal.cl;
 import com.orhanobut.logger.Logger;
@@ -24,7 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -82,6 +83,7 @@ public class GameActivity extends Activity {
         if (Query.all(Score.class).get().size() != 0) {
             currentScoreObj = Query.all(Score.class).get().get(0);
             currentScore = currentScoreObj.score;
+            numberIncorrect = currentScoreObj.incorrect;
         } else {
             currentScore = 0;
             numberIncorrect = 0;
@@ -147,7 +149,7 @@ public class GameActivity extends Activity {
         //immediately being playing game on launch
         displayCurrentStimulus();
 
-}
+    }
 
     //Invoked either when user responds to a question or touches the skip button and either displays next stimulus
     //or text indicating there are no more stimuli.

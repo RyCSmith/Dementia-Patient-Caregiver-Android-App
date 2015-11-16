@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DementiaApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_menu">Menu</string>
+    <string name="title_activity_location">Location</string>
+    <string name="title_activity_stimulus_upload">Upload Stimulus</string>
+    <string name="title_activity_upload_photo_with_audio">Upload Photo With Audio</string>
+    <string name="title_activity_safezone_creation">SafezoneCreationActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+
+</resources>

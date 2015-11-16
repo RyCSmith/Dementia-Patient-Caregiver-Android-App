@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="16dp"
+    android:background="#302F30">
+
+    <TextView
+        android:id="@+id/times_played_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Number of times game has been played:"
+        android:textSize="25sp"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <TextView
+        android:id="@+id/times_played_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="0"
+        android:layout_below="@id/times_played_text"
+        android:textSize="20sp"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <TextView
+        android:id="@+id/avg_score_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Avg score:"
+        android:layout_below="@id/times_played_num"
+        android:layout_marginTop="40dp"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:textSize="25sp"
+        android:textColor="#E7BB66" />
+
+    <TextView
+        android:id="@+id/avg_score_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="NA"
+        android:layout_below="@id/avg_score_text"
+        android:textSize="20sp"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <TextView
+        android:id="@+id/max_score_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Max score:"
+        android:layout_below="@id/avg_score_num"
+        android:layout_marginTop="40dp"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:textSize="25sp"
+        android:textColor="#E7BB66" />
+
+    <TextView
+        android:id="@+id/max_score_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/max_score_text"
+        android:textSize="20sp"
+        android:text="NA"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <TextView
+        android:id="@+id/min_score_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Min score:"
+        android:layout_below="@id/max_score_num"
+        android:layout_marginTop="40dp"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:textSize="25sp"
+        android:textColor="#E7BB66" />
+
+    <TextView
+        android:id="@+id/min_score_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/min_score_text"
+        android:textSize="20sp"
+        android:text="NA"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/min_score_num"
+        android:layout_centerHorizontal="true"
+        android:text="Back"
+        android:fontFamily="serif"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:textColor="#E7BB66"
+        android:background="#808080" />
+
+</RelativeLayout>
