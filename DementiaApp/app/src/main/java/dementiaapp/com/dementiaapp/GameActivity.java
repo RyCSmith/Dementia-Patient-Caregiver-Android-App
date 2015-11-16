@@ -24,7 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,6 +56,7 @@ public class GameActivity extends Activity {
     private int currentStimulusIndex;
 
     private int currentScore = 0;
+    private int numberIncorrect = 0;
     String photoPath;
 
     @Override
@@ -83,10 +84,22 @@ public class GameActivity extends Activity {
             currentScore = currentScoreObj.score;
         } else {
             currentScore = 0;
+            numberIncorrect = 0;
             currentScoreObj = new Score();
             currentScoreObj.id = UUID.randomUUID().toString();
             currentScoreObj.score = 0;
+            currentScoreObj.incorrect = 0;
             currentScoreObj.save();
+            String metricsFilePath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/metrics.txt";
+            try {
+                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(metricsFilePath, true)));
+                out.println("0.0");
+                out.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         updateScore();
 
@@ -195,6 +208,9 @@ public class GameActivity extends Activity {
                                 Log.d("VISHWA", "MATCH FOUND THROUGH EDIT DISTANCE:" + response + " with " + possibility + " and edit distance = " + minimumEditDistance);
                                 changeStimulus();
                             }
+                            else {
+                                numberIncorrect++;
+                            }
                         }
                     }
                 }
@@ -212,7 +228,38 @@ public class GameActivity extends Activity {
 
 
     private void updateScore() {
+        double avgScore = 0.0;
+        if(currentScore != 0 || numberIncorrect != 0) {
+            avgScore = currentScore / (currentScore + numberIncorrect);
+        }
+        String metricsFilePath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/metrics.txt";
+        try {
+            FileReader fileReader = new FileReader(metricsFilePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            StringBuilder sb = new StringBuilder();
+            //reads in all lines of file except last into string builder (that way it can write over last line
+            // which is most recent line)
+            String line = bufferedReader.readLine();
+            while(line != null) {
+                String line2 = bufferedReader.readLine();
+                if(line2 != null) {
+                    sb.append(line + "\n");
+                }
+                line = line2;
+            }
+            bufferedReader.close();
+            sb.append(avgScore + "");
+            PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(metricsFilePath, false)));
+            out.println(sb.toString());
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         currentScoreObj.score = currentScore;
+        currentScoreObj.incorrect = numberIncorrect;
         currentScoreObj.save();
         score.setText(currentScore + "");
     }

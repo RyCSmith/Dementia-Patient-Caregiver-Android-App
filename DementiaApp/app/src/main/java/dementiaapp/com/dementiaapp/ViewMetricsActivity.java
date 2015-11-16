@@ -55,10 +55,12 @@ public class ViewMetricsActivity extends Activity {
                 line = bufferedReader.readLine();
             }
             bufferedReader.close();
-            timesPlayed.setText(scores.size() + "");
-            avgScore.setText(getAvgScore() + "");
-            maxScore.setText(getMaxScore() + "");
-            minScore.setText(getMinScore() + "");
+            if(scores.size() > 0) {
+                timesPlayed.setText(scores.size() + "");
+                avgScore.setText(getAvgScore() + "");
+                maxScore.setText(getMaxScore() + "");
+                minScore.setText(getMinScore() + "");
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
