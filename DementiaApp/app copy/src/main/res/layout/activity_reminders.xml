@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:id="@+id/reminders_scrollview"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <LinearLayout android:id="@+id/lcontents"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/eventName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Name"
+            android:inputType="text" />
+        <Button
+            android:id="@+id/show_date_time_picker_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Pick date and time"
+            android:textSize="20sp" />
+        <Button
+            android:id="@+id/create_reminder_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Reminder"
+            android:textSize="20sp"/>
+    </LinearLayout>
+</ScrollView>

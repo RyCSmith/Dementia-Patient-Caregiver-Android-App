@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#302F30">
+
+    <TextView
+        android:id="@+id/score_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="#E7BB66"
+        android:text="Score"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#E7BB66"
+        android:text="0"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/score_text"/>
+    
+    <View
+        android:id="@+id/game_screen_divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#E7BB66"
+        android:layout_below="@id/score"
+        android:layout_marginTop="12dp" />
+
+    <ImageView
+        android:id="@+id/stimulus_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/game_screen_divider"
+        android:layout_above="@+id/bottom_bar"
+        android:cropToPadding="true"
+        android:maxHeight="500dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+    <RelativeLayout
+        android:id="@+id/bottom_bar"
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp">
+
+        <Button
+            android:id="@+id/help_button"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:text="Help"
+            android:layout_width="100dp"
+            android:textSize="20dp"
+            android:textColor="#E7BB66"
+            android:layout_height="100dp"
+            android:drawableTop="@drawable/ic_help"/>
+
+        <ImageView
+            android:id="@+id/mic_button"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_mic"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:adjustViewBounds="true"/>
+
+        <Button
+            android:id="@+id/skip_button"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="100dp"
+            android:textSize="20dp"
+            android:textColor="#E7BB66"
+            android:layout_height="match_parent"
+            android:text="Skip"
+            android:drawableTop="@drawable/ic_skip" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/stimulus_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
