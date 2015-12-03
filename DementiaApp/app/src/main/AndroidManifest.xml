@@ -110,6 +110,10 @@
             android:name=".UpdateStimulusActivity"
             android:label="@string/title_activity_update_stimulus" >
         </activity>
+        <activity
+            android:name=".NameUploadActivity"
+            android:label="@string/title_activity_name_upload" >
+        </activity>
     </application>
 
 </manifest>

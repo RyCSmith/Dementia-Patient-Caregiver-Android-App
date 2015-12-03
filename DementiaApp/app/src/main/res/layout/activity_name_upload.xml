@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    tools:context="dementiaapp.com.dementiaapp.MenuActivity"
+    android:background="#302F30">
+
+    <TextView
+        android:id="@+id/prompt_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Enter a name for this question (used in stimulus browser):"
+        android:textSize="20sp"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <EditText
+        android:id="@+id/input_text"
+        android:layout_width="fill_parent"
+        android:layout_height="150px"
+        android:layout_below="@id/prompt_text"
+        android:hint="Enter Name Here"
+        android:inputType="text"
+        android:background="#ffffff" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_text"
+        android:layout_marginTop="20dp"
+        android:text="Save"
+        android:textSize="14sp"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:background="#808080"
+        android:textColor="#E7BB66"/>
+
+</RelativeLayout>
