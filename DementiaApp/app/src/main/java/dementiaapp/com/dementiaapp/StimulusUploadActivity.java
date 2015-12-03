@@ -1,47 +1,39 @@
 package dementiaapp.com.dementiaapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
+import android.graphics.BitmapFactory;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.internal.cl;
-import com.orhanobut.logger.Logger;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 
@@ -55,8 +47,12 @@ public class StimulusUploadActivity extends Activity {
     private Button saveButton;
     private Button discardButton;
     private String stimuliMainDir;
+    private Button recordHelpButton;
     private String newStimulusFolderPath;
     private static final int REQUEST_CODE_SPEECH_RECOGNITION = 100;
+    private ImageView stimulusImage;
+
+    final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +81,18 @@ public class StimulusUploadActivity extends Activity {
         recordAnswerButton.setEnabled(false);
         recordCorrectFeedbackButton.setEnabled(false);
         recordIncorrectFeedbackButton.setEnabled(false);
-        addPhotoButton.setEnabled(false);
+
+
+
+
+        stimulusImage = (ImageView) findViewById(R.id.stimulus1_image);
+
+        //addPhotoButton.setEnabled(false);
+
+
+        recordHelpButton = (Button) findViewById(R.id.record_audio_help_button);
         saveButton.setEnabled(false);
+        recordHelpButton.setEnabled(false);
 
         //add listeners for each button
 
@@ -94,6 +100,9 @@ public class StimulusUploadActivity extends Activity {
         recordQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 String newFilePath;
                 if (newStimulusFolderPath.endsWith("/"))
                     newFilePath = newStimulusFolderPath + "question" + ".mp3";
@@ -137,7 +146,47 @@ public class StimulusUploadActivity extends Activity {
                 bundle.putString("newStimulusFolder", newStimulusFolderPath);
                 intent.putExtras(bundle);
                 startActivity(intent);
+
+                String stimuliMainDirPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+
                 addPhotoButton.setEnabled(false);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        AlertDialog.Builder builder;
+                        builder = new AlertDialog.Builder(context);
+
+                        builder.setTitle("Confirm");
+                        builder.setMessage("Do you wish to see the image?");
+
+                        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do nothing but close the dialog
+
+                                dialog.dismiss();
+                                displayPic();
+                            }
+
+                        });
+
+                        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do nothing
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                }, 1000);
+
+                recordQuestionButton.setEnabled(true);
+
             }
         });
 
@@ -169,9 +218,26 @@ public class StimulusUploadActivity extends Activity {
             }
         });
 
+        //Optionally allow user to record an audio message to play if game-player answers correctly.
+        recordHelpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newFilePath;
+                if (newStimulusFolderPath.endsWith("/"))
+                    newFilePath = newStimulusFolderPath + "help" + ".mp3";
+                else
+                    newFilePath = newStimulusFolderPath + "/help" + ".mp3";
+                recordAudio(newFilePath, "help");
+                recordHelpButton.setEnabled(false);
+            }
+        });
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*Intent intent = new Intent();
+                intent.setClass(StimulusUploadActivity.this, MenuActivityAdmin.class);
+                startActivity(intent);*/
                 finish();
             }
         });
@@ -182,6 +248,9 @@ public class StimulusUploadActivity extends Activity {
                 for(File file: new File(newStimulusFolderPath).listFiles())
                     file.delete();
                 new File(newStimulusFolderPath).delete();
+                /*Intent intent = new Intent();
+                intent.setClass(StimulusUploadActivity.this, MenuActivityAdmin.class);
+                startActivity(intent);*/
                 finish();
             }
         });
@@ -221,6 +290,17 @@ public class StimulusUploadActivity extends Activity {
         });
         recorder.start();
         mProgressDialog.show();
+    }
+
+    private void displayPic() {
+        Bitmap stimulusBitmap;
+
+        if (newStimulusFolderPath.endsWith("/"))
+            stimulusBitmap = BitmapFactory.decodeFile(newStimulusFolderPath + "photo.jpg");
+        else
+            stimulusBitmap = BitmapFactory.decodeFile(newStimulusFolderPath + "/photo.jpg");
+
+        stimulusImage.setImageBitmap(stimulusBitmap);
     }
 
     @Override
@@ -305,7 +385,10 @@ public class StimulusUploadActivity extends Activity {
                     recordAnswerButton.setEnabled(false);
                     recordCorrectFeedbackButton.setEnabled(true);
                     recordIncorrectFeedbackButton.setEnabled(true);
-                    addPhotoButton.setEnabled(true);
+
+                    addPhotoButton.setEnabled(false);
+
+                    recordHelpButton.setEnabled(true);
                     saveButton.setEnabled(true);
                 }
             }

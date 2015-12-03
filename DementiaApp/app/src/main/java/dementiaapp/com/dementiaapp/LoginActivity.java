@@ -1,6 +1,9 @@
 package dementiaapp.com.dementiaapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -31,13 +34,24 @@ public class LoginActivity extends Activity {
             }
         });
 
-        adminButton.setOnClickListener(new View.OnClickListener() {
+        adminButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                //this is where all logic takes place when loginButton is clicked
-                //doesnt do anything now, just called handleSuccessfulLogin where details are stored
-                //this would be a good place to switch to a user mode button
-                openMenuActivityAdmin();
+            public boolean onLongClick(View v) {
+
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(3000); //add sleep to increase the click time (200 = 0.2 seconds)
+                                //Your code after the long click goes here
+                            } catch (Exception e) {
+
+                            }
+                            openMenuActivityAdmin();
+                        }
+                    };
+                    runnable.run();
+                    return false;
             }
         });
 
@@ -47,7 +61,32 @@ public class LoginActivity extends Activity {
                 //this is where all logic takes place when loginButton is clicked
                 //doesnt do anything now, just called handleSuccessfulLogin where details are stored
                 //this would be a good place to switch to a user mode button
-                finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Do you want to exit?");
+
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing but close the dialog
+                        finish();
+                        dialog.dismiss();
+                    }
+
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
     }

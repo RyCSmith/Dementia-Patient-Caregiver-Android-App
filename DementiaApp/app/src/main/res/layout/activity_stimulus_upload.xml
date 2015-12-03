@@ -1,3 +1,7 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,10 +23,36 @@
         android:textColor="#E7BB66"/>
 
     <Button
-        android:id="@+id/record_audio_stimulus_button"
+        android:id="@+id/upload_photo_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/audio_stimulus_title"
+        android:layout_marginTop="20dp"
+        android:text="Upload Photo (optional)"
+        android:textSize="14sp"
+        android:background="#808080"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <ImageView
+        android:id="@+id/stimulus1_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/upload_photo_button"
+        android:layout_marginTop="20dp"
+        android:cropToPadding="true"
+        android:maxHeight="400dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+    <Button
+        android:id="@+id/record_audio_stimulus_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/stimulus1_image"
         android:layout_marginTop="20dp"
         android:text="Record Audio Prompt (Question)"
         android:textSize="14sp"
@@ -70,13 +100,14 @@
         android:background="#808080"
         android:textColor="#E7BB66"/>
 
+
     <Button
-        android:id="@+id/upload_photo_button"
+        android:id="@+id/record_audio_help_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/record_incorrect_audio_answer_button"
         android:layout_marginTop="20dp"
-        android:text="Upload Photo (optional)"
+        android:text="Record Help"
         android:textSize="14sp"
         android:background="#808080"
         android:fontFamily="serif"
@@ -86,7 +117,7 @@
         android:id="@+id/save_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/upload_photo_button"
+        android:layout_below="@id/record_audio_help_button"
         android:layout_marginTop="20dp"
         android:text="Save Stimulus"
         android:textSize="14sp"
@@ -109,3 +140,4 @@
         android:textColor="#E7BB66"/>
 
 </RelativeLayout>
+</ScrollView>

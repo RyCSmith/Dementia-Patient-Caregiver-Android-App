@@ -1,6 +1,7 @@
 package dementiaapp.com.dementiaapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,25 +16,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.AlertDialog;
 
-import com.google.android.gms.internal.cl;
-import com.orhanobut.logger.Logger;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.*;
-import java.lang.reflect.Array;
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import se.emilsjolander.sprinkles.CursorList;
-import se.emilsjolander.sprinkles.Query;
 
 /**
  * Created by vishwa on 4/1/15.
@@ -51,12 +38,12 @@ public class GameActivity extends Activity {
 
     private List<newStimulus> stimulusList;
     private newStimulus currentStimulus;
-    private Score currentScoreObj;
 
     private int currentStimulusIndex;
 
+    private String stimuliMainDirPath;
+
     private int currentScore = 0;
-    private int numberIncorrect = 0;
     String photoPath;
 
     @Override
@@ -71,40 +58,15 @@ public class GameActivity extends Activity {
         micButton = (ImageView) findViewById(R.id.mic_button);
         score = (TextView) findViewById(R.id.score);
         helpButton = (Button) findViewById(R.id.help_button);
-        helpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBasicAlertDialog("How to play activity",
-                        "Click the microphone button and then name the object in the image shown.");
-            }
-        });
 
-        if (Query.all(Score.class).get().size() != 0) {
-            currentScoreObj = Query.all(Score.class).get().get(0);
-            currentScore = currentScoreObj.score;
-        } else {
-            currentScore = 0;
-            numberIncorrect = 0;
-            currentScoreObj = new Score();
-            currentScoreObj.id = UUID.randomUUID().toString();
-            currentScoreObj.score = 0;
-            currentScoreObj.incorrect = 0;
-            currentScoreObj.save();
-            String metricsFilePath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/metrics.txt";
-            try {
-                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(metricsFilePath, true)));
-                out.println("0.0");
-                out.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        updateScore();
+        //stimuliMainDir = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+
+
+
+        currentScore = 0;
 
         //folder containing all stimulus subfolders
-        String stimuliMainDirPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+        stimuliMainDirPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
 
         //We thought about including default audio recordings for correct and incorrect answers, as well as question-specific ones.
         //They were to reside in this folder.
@@ -114,46 +76,83 @@ public class GameActivity extends Activity {
         File[] allStimuli = stimuliMainFolder.listFiles();
 
         stimulusList = new ArrayList<>();
+        if (allStimuli.length != 0) {
+            //create list of stimulus objects based on whether custom images or audio have been included
+            for (File stimulusFolder : allStimuli) {
+                if (stimulusFolder.isDirectory()) {
+                    String fullPath = stimulusFolder.getAbsolutePath();
+                    String stimulusName = fullPath.substring(fullPath.lastIndexOf("/stimuli/") + 8);
+                    File[] stimulusParts = stimulusFolder.listFiles();
+                    boolean containsIncorrectResponseAudio = false;
+                    boolean containsCorrectResponseAudio = false;
+                    boolean containsImage = false;
 
-        //create list of stimulus objects based on whether custom images or audio have been included
-        for (File stimulusFolder : allStimuli){
-            String fullPath = stimulusFolder.getAbsolutePath();
-            String stimulusName = fullPath.substring(fullPath.lastIndexOf("/stimuli/") + 8);
-            File[] stimulusParts = stimulusFolder.listFiles();
-            boolean containsIncorrectResponseAudio = false;
-            boolean containsCorrectResponseAudio = false;
-            boolean containsImage = false;
+                    for (File part : stimulusParts) {
+                        if (part.getAbsolutePath().contains("photo")) {
+                            containsImage = true;
+                            photoPath = part.getAbsolutePath();
+                        }
+                        if (part.getAbsolutePath().contains("incorrectFeedback")) {
+                            containsIncorrectResponseAudio = true;
+                        }
+                        if (part.getAbsolutePath().contains("correctFeedback")) {
+                            containsCorrectResponseAudio = true;
+                        }
+                    }
 
-            for (File part : stimulusParts){
-                if (part.getAbsolutePath().contains("photo")){
-                    containsImage = true;
-                    photoPath = part.getAbsolutePath();
+                    newStimulus stimulus = new newStimulus(fullPath, defaultsFolderPath, containsImage,
+                            containsIncorrectResponseAudio, containsCorrectResponseAudio);
+                    stimulusList.add(stimulus);
+
+                    resetStimulus();
+
+                    //immediately being playing game on launch
+                    displayCurrentStimulus();
                 }
-                if (part.getAbsolutePath().contains("incorrectFeedback")){
-                    containsIncorrectResponseAudio = true;
-                }
-                if (part.getAbsolutePath().contains("correctFeedback")){
-                    containsCorrectResponseAudio = true;
-                }
+
+
             }
-
-            newStimulus stimulus = new newStimulus(fullPath, defaultsFolderPath, containsImage,
-                    containsIncorrectResponseAudio, containsCorrectResponseAudio);
-            stimulusList.add(stimulus);
         }
-
-        resetStimulus();
-
-        //immediately being playing game on launch
-        displayCurrentStimulus();
-
 }
 
     //Invoked either when user responds to a question or touches the skip button and either displays next stimulus
     //or text indicating there are no more stimuli.
     private void changeStimulus() {
-        if (stimulusList == null || currentStimulusIndex >= stimulusList.size() - 1) {
+        if (stimulusList == null ) {
             displayNoMoreStimuli();
+        }
+        if (currentStimulusIndex >= stimulusList.size() - 1)  {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Confirm");
+            builder.setMessage("Do you wish to play again?");
+
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    // Do nothing but close the dialog
+
+                    dialog.dismiss();
+                    currentStimulusIndex = 0;
+                }
+
+            });
+
+            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Do nothing
+                    dialog.dismiss();
+                    displayNoMoreStimuli();
+                }
+            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
+
         } else {
             currentStimulusIndex++;
             displayCurrentStimulus();
@@ -187,8 +186,10 @@ public class GameActivity extends Activity {
                         //Tell user the answer was correct, and move onto next stimulus.
                         if (currentStimulus.hasCustomCorrectResponseAudio()) {
                             MemAidUtils.playAudio(currentStimulus.getOnCorrectResponseAudio());
+                        } else {
+                            MemAidUtils.playAudio(stimuliMainDirPath+"correctFB.mp3");
                         }
-                        Toast.makeText(getApplicationContext(),"YOU GOT THE RIGHT ANSWER! CONGRATS!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(),"YOU GOT THE RIGHT ANSWER! CONGRATS!", Toast.LENGTH_LONG).show();
                         changeStimulus();
                     }
                 }
@@ -203,13 +204,13 @@ public class GameActivity extends Activity {
                                 updateScore();
                                 if (currentStimulus.hasCustomCorrectResponseAudio()) {
                                     MemAidUtils.playAudio(currentStimulus.getOnCorrectResponseAudio());
+                                } else {
+                                    MemAidUtils.playAudio(stimuliMainDirPath+"correctFB.mp3");
                                 }
-                                Toast.makeText(getApplicationContext(),"YOU GOT THE RIGHT ANSWER! CONGRATS!", Toast.LENGTH_LONG).show();
+
+                                //Toast.makeText(getApplicationContext(),"YOU GOT THE RIGHT ANSWER! CONGRATS!", Toast.LENGTH_LONG).show();
                                 Log.d("VISHWA", "MATCH FOUND THROUGH EDIT DISTANCE:" + response + " with " + possibility + " and edit distance = " + minimumEditDistance);
                                 changeStimulus();
-                            }
-                            else {
-                                numberIncorrect++;
                             }
                         }
                     }
@@ -219,48 +220,16 @@ public class GameActivity extends Activity {
                 if (currentStimulus.hasCustomCorrectResponseAudio()) {
                     MemAidUtils.playAudio(currentStimulus.getOnIncorrectResponseAudio());
                 } else{
-                    MemAidUtils.playAudio(currentStimulus.getCorrectAnswerAsAudio());
+                    MemAidUtils.playAudio(stimuliMainDirPath+"incorrectFB.mp3");
+                    //MemAidUtils.playAudio(currentStimulus.getCorrectAnswerAsAudio());
                 }
-                Toast.makeText(getApplicationContext(),"TOO BAD, YOU DIDN'T GET THAT ONE RIGHT. BETTER LUCK NEXT TIME!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"TOO BAD, YOU DIDN'T GET THAT ONE RIGHT. BETTER LUCK NEXT TIME!", Toast.LENGTH_LONG).show();
             }
         }
     }
 
 
     private void updateScore() {
-        double avgScore = 0.0;
-        if(currentScore != 0 || numberIncorrect != 0) {
-            avgScore = currentScore / (currentScore + numberIncorrect);
-        }
-        String metricsFilePath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/metrics.txt";
-        try {
-            FileReader fileReader = new FileReader(metricsFilePath);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            StringBuilder sb = new StringBuilder();
-            //reads in all lines of file except last into string builder (that way it can write over last line
-            // which is most recent line)
-            String line = bufferedReader.readLine();
-            while(line != null) {
-                String line2 = bufferedReader.readLine();
-                if(line2 != null) {
-                    sb.append(line + "\n");
-                }
-                line = line2;
-            }
-            bufferedReader.close();
-            sb.append(avgScore + "");
-            PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(metricsFilePath, false)));
-            out.println(sb.toString());
-            out.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        currentScoreObj.score = currentScore;
-        currentScoreObj.incorrect = numberIncorrect;
-        currentScoreObj.save();
         score.setText(currentScore + "");
     }
 
@@ -311,10 +280,17 @@ public class GameActivity extends Activity {
         currentStimulus = stimulusList.get(currentStimulusIndex);
 
         if(currentStimulus.hasCustomImage()) {
+            //Bitmap stimulusBitmap = BitmapFactory.decodeFile("/storage/sdcard1/DCIM/Camera/IMG_20151113_173948.jpg");
             Bitmap stimulusBitmap = BitmapFactory.decodeFile(currentStimulus.getStimulusImage());
 
             if (stimulusBitmap == null){
-                int i = 0;
+                try {
+                    //stimulusBitmap = BitmapFactory.decodeFile("file:///android_asset/questionMark.png");
+                    InputStream bitmap=getAssets().open("questionMark.png");
+                    stimulusBitmap=BitmapFactory.decodeStream(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             stimulusImage.setImageBitmap(stimulusBitmap);
         }
@@ -327,6 +303,16 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View v) {
                 changeStimulus();
+            }
+        });
+
+        //help
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //showBasicAlertDialog("How to play activity",
+                //      "Click the microphone button and then name the object in the image shown.");
+                MemAidUtils.playAudio(currentStimulus.getHelpAudio());
             }
         });
 

@@ -23,6 +23,7 @@
         android:textColor="#E7BB66"
         android:foreground="#fffd41" />
 
+
     <Button
         android:id="@+id/view_metrics_button"
         android:layout_width="wrap_content"
@@ -54,5 +55,14 @@
         android:textSize="20sp"
         android:textColor="#E7BB66"
         android:background="#808080" />
+
+    <Button
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Browser"
+        android:id="@+id/browserButton"
+        android:layout_below="@+id/upload_stimulus_button"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

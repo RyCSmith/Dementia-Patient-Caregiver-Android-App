@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    tools:context="dementiaapp.com.dementiaapp.MenuActivity"
+    android:background="#302F30">
+
+    <TextView
+        android:id="@+id/audio_stimulus_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Use the buttons below to upload correct and incorrect responses:"
+        android:textSize="20sp"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <Button
+        android:id="@+id/record_right_feedback_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/audio_stimulus_title"
+        android:layout_marginTop="20dp"
+        android:text="Record correct feedback"
+        android:textSize="14sp"
+        android:background="#808080"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <Button
+        android:id="@+id/record_wrong_feedback_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/record_right_feedback_button"
+        android:layout_marginTop="20dp"
+        android:text="Record wrong feedback"
+        android:textSize="14sp"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:background="#808080"
+        android:textColor="#E7BB66"/>
+
+    <Button
+        android:id="@+id/save1_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/record_wrong_feedback_button"
+        android:layout_marginTop="20dp"
+        android:text="Save Stimulus"
+        android:textSize="14sp"
+        android:background="#808080"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+</RelativeLayout>

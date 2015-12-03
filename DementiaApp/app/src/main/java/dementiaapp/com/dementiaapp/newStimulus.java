@@ -16,6 +16,7 @@ public class newStimulus {
     private String stimulusName;
     private String audioPrompt;
     private String correctAnswerAsAudio;
+    private String helpAudio;
     private String stimulusImage;
     private String onCorrectResponseAudio;
     private String onIncorrectResponseAudio;
@@ -35,9 +36,12 @@ public class newStimulus {
 
         audioPrompt = stimulusName + "question.mp3";
         correctAnswerAsAudio = stimulusName + "answer.mp3";
+        helpAudio = stimulusName + "help.mp3";
         possibleCorrectResponses = readPossibleResponsesFromFile(stimulusName + "possibleAnswers.txt");
         if (customImage) {
             stimulusImage = stimulusName + "photo.jpg";
+            this.customImage = true;
+        } else {
             this.customImage = true;
         }
 
@@ -95,6 +99,8 @@ public class newStimulus {
     public String getStimulusImage(){
         return stimulusImage;
     }
+
+    public String getHelpAudio() { return helpAudio; }
 
     public String getOnCorrectResponseAudio(){
         return onCorrectResponseAudio;

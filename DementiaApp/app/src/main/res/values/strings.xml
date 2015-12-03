@@ -6,9 +6,15 @@
     <string name="title_activity_menu">Menu</string>
     <string name="title_activity_location">Location</string>
     <string name="title_activity_stimulus_upload">Upload Stimulus</string>
+    <string name="title_activity_feedback_upload">Upload Feedback</string>
     <string name="title_activity_upload_photo_with_audio">Upload Photo With Audio</string>
     <string name="title_activity_safezone_creation">SafezoneCreationActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_browser">BrowserActivity</string>
+    <string name="title_activity_second_browser">SecondBrowser</string>
+    <string name="title_activity_edit_browser">EditBrowserActivity</string>
+    <string name="title_activity_view_browser_image">ViewBrowserImage</string>
+    <string name="title_activity_update_stimulus">UpdateStimulusActivity</string>
 
 </resources>

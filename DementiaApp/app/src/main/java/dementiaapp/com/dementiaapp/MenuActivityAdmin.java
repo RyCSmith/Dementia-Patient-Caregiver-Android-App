@@ -3,19 +3,27 @@ package dementiaapp.com.dementiaapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.File;
+
 public class MenuActivityAdmin extends Activity {
+
+    private String stimuliMainDir;
+
+    private String correct;
+    private String incorrect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_admin);
 
-
+        Button browserButton = (Button) findViewById(R.id.browserButton);
         Button uploadStimulusButton = (Button) findViewById(R.id.upload_stimulus_button);
         Button viewMetricsButton = (Button) findViewById(R.id.view_metrics_button);
         Button logoutButton = (Button) findViewById(R.id.logout_button);
@@ -24,7 +32,29 @@ public class MenuActivityAdmin extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(MenuActivityAdmin.this, StimulusUploadActivity.class);
+                stimuliMainDir = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+
+                correct = stimuliMainDir + "correctFB.mp3";
+                incorrect = stimuliMainDir + "incorrectFB.mp3";
+                File f = new File(correct);
+                File f2 = new File(incorrect);
+
+                //intent.setClass(MenuActivityAdmin.this, StimulusUploadActivity.class);
+
+                if (f.exists() && f2.exists()) {
+                    intent.setClass(MenuActivityAdmin.this, StimulusUploadActivity.class);
+                } else {
+                    intent.setClass(MenuActivityAdmin.this, FeedbackUploadActivity.class);
+                }
+                startActivity(intent);
+            }
+        });
+
+        browserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(MenuActivityAdmin.this, BrowserActivity.class);
                 startActivity(intent);
             }
         });
@@ -41,6 +71,9 @@ public class MenuActivityAdmin extends Activity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*Intent intent = new Intent();
+                intent.setClass(MenuActivityAdmin.this, LoginActivity.class);
+                startActivity(intent);*/
                 finish();
             }
         });
