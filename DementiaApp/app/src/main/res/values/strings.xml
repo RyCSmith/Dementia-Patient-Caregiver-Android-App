@@ -16,5 +16,6 @@
     <string name="title_activity_edit_browser">EditBrowserActivity</string>
     <string name="title_activity_view_browser_image">ViewBrowserImage</string>
     <string name="title_activity_update_stimulus">UpdateStimulusActivity</string>
+    <string name="title_activity_name_upload">NameUploadActivity</string>
 
 </resources>

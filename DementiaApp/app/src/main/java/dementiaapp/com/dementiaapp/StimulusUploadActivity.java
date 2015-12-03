@@ -39,6 +39,7 @@ import java.util.UUID;
 
 public class StimulusUploadActivity extends Activity {
 
+    private Button stimulusNameButton;
     private Button recordQuestionButton;
     private Button recordAnswerButton;
     private Button addPhotoButton;
@@ -71,6 +72,7 @@ public class StimulusUploadActivity extends Activity {
         setContentView(R.layout.activity_stimulus_upload);
 
         //set up all Buttons
+        stimulusNameButton = (Button) findViewById(R.id.stimulus_name_button);
         recordQuestionButton = (Button) findViewById(R.id.record_audio_stimulus_button);
         addPhotoButton = (Button) findViewById(R.id.upload_photo_button);
         recordAnswerButton = (Button) findViewById(R.id.record_audio_answer_button);
@@ -78,6 +80,7 @@ public class StimulusUploadActivity extends Activity {
         recordIncorrectFeedbackButton = (Button) findViewById(R.id.record_incorrect_audio_answer_button);
         saveButton = (Button) findViewById(R.id.save_button);
         discardButton = (Button) findViewById(R.id.discard_button);
+        recordQuestionButton.setEnabled(false);
         recordAnswerButton.setEnabled(false);
         recordCorrectFeedbackButton.setEnabled(false);
         recordIncorrectFeedbackButton.setEnabled(false);
@@ -95,6 +98,25 @@ public class StimulusUploadActivity extends Activity {
         recordHelpButton.setEnabled(false);
 
         //add listeners for each button
+
+        //Record a question
+        stimulusNameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String nameFilePath;
+                if (newStimulusFolderPath.endsWith("/"))
+                    nameFilePath = newStimulusFolderPath + "name" + ".txt";
+                else
+                    nameFilePath = newStimulusFolderPath + "/name" + ".txt";
+
+                Intent i = new Intent(StimulusUploadActivity.this, NameUploadActivity.class);
+                i.putExtra("nameFilePath", nameFilePath);
+                startActivity(i);
+                stimulusNameButton.setEnabled(false);
+                recordQuestionButton.setEnabled(true);
+            }
+        });
 
         //Record a question
         recordQuestionButton.setOnClickListener(new View.OnClickListener() {
