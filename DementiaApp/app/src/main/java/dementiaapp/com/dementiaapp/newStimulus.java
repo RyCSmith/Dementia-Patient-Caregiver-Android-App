@@ -16,43 +16,29 @@ public class newStimulus {
     private String stimulusName;
     private String audioPrompt;
     private String correctAnswerAsAudio;
-    private String helpAudio;
     private String stimulusImage;
-    private String onCorrectResponseAudio;
-    private String onIncorrectResponseAudio;
     private ArrayList<String> possibleCorrectResponses;
     private boolean customImage = false;
-    private boolean customIncorrectResponseAudio = false;
-    private boolean customCorrectResponseAudio = false;
+    int numCorrect;
+    int numAsked;
 
-
-    public newStimulus(String stimulusName, String defaultDir, boolean customImage, boolean customIncorrectResponseAudio,
-                       boolean customCorrectResponseAudio){
-        if (!stimulusName.endsWith("/")) {
+    public newStimulus(String stimulusName, boolean customImage, int numAsked, int numCorrect) {
+        if(!stimulusName.endsWith("/")) {
             stimulusName = stimulusName + "/";
         }
-
+        this.numCorrect = numCorrect;
+        this.numAsked = numAsked;
         this.stimulusName = stimulusName;
 
         audioPrompt = stimulusName + "question.mp3";
-        correctAnswerAsAudio = stimulusName + "answer.mp3";
-        helpAudio = stimulusName + "help.mp3";
+        correctAnswerAsAudio = stimulusName + "answer.amr";
         possibleCorrectResponses = readPossibleResponsesFromFile(stimulusName + "possibleAnswers.txt");
-        if (customImage) {
+        if(customImage) {
             stimulusImage = stimulusName + "photo.jpg";
             this.customImage = true;
-        } else {
+        }
+        else {
             this.customImage = true;
-        }
-
-        if (customIncorrectResponseAudio) {
-            onIncorrectResponseAudio = stimulusName + "onIncorrectResponseAudio.mp3";
-            this.customIncorrectResponseAudio = true;
-        }
-
-        if (customCorrectResponseAudio) {
-            onCorrectResponseAudio = stimulusName + "correctFeedback.mp3";
-            this.customCorrectResponseAudio = true;
         }
     }
 
@@ -73,55 +59,38 @@ public class newStimulus {
 
     }
 
-    public void addCustomIncorrectResponseAudio(){
-        onIncorrectResponseAudio = stimulusName + "onIncorrectResponseAudio.mp3";
-    }
-
-    public void addCustomCorrectResponseAudio(){
-        onCorrectResponseAudio = stimulusName + "defaultCorrectResponseAudio.mp3";
-    }
-
-    public void addCustomImage(){
+    public void addCustomImage() {
         stimulusImage = stimulusName + "photo.jpg";
     }
 
-    public String getStimulusName(){
+    public String getStimulusName() {
         return stimulusName;
     }
 
-    public String getAudioPrompt(){
+    public int getNumCorrect() {
+        return numCorrect;
+    }
+
+    public int getNumAsked() {
+        return numAsked;
+    }
+
+    public String getAudioPrompt() {
         return audioPrompt;
     }
 
-    public String getCorrectAnswerAsAudio(){
+    public String getCorrectAnswerAsAudio() {
         return correctAnswerAsAudio;
     }
-    public String getStimulusImage(){
+    public String getStimulusImage() {
         return stimulusImage;
     }
 
-    public String getHelpAudio() { return helpAudio; }
-
-    public String getOnCorrectResponseAudio(){
-        return onCorrectResponseAudio;
-    }
-    public String getOnIncorrectResponseAudio(){
-        return onIncorrectResponseAudio;
-    }
-
     public boolean hasCustomImage(){
-        return  customImage;
+        return customImage;
     }
 
-    public boolean hasCustomIncorrectResponseAudio(){
-        return customIncorrectResponseAudio;
-    }
-
-    public boolean hasCustomCorrectResponseAudio(){
-        return customCorrectResponseAudio;
-    }
-
-    public ArrayList<String> getPossibleCorrectAnswers(){
+    public ArrayList<String> getPossibleCorrectAnswers() {
         return possibleCorrectResponses;
     }
 

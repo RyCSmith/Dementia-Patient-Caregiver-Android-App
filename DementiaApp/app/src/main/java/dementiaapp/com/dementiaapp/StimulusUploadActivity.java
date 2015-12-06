@@ -43,12 +43,9 @@ public class StimulusUploadActivity extends Activity {
     private Button recordQuestionButton;
     private Button recordAnswerButton;
     private Button addPhotoButton;
-    private Button recordCorrectFeedbackButton;
-    private Button recordIncorrectFeedbackButton;
     private Button saveButton;
     private Button discardButton;
     private String stimuliMainDir;
-    private Button recordHelpButton;
     private String newStimulusFolderPath;
     private static final int REQUEST_CODE_SPEECH_RECOGNITION = 100;
     private ImageView stimulusImage;
@@ -76,27 +73,17 @@ public class StimulusUploadActivity extends Activity {
         recordQuestionButton = (Button) findViewById(R.id.record_audio_stimulus_button);
         addPhotoButton = (Button) findViewById(R.id.upload_photo_button);
         recordAnswerButton = (Button) findViewById(R.id.record_audio_answer_button);
-        recordCorrectFeedbackButton = (Button) findViewById(R.id.record_correct_audio_answer_button);
-        recordIncorrectFeedbackButton = (Button) findViewById(R.id.record_incorrect_audio_answer_button);
         saveButton = (Button) findViewById(R.id.save_button);
         discardButton = (Button) findViewById(R.id.discard_button);
         recordQuestionButton.setEnabled(false);
         recordAnswerButton.setEnabled(false);
-        recordCorrectFeedbackButton.setEnabled(false);
-        recordIncorrectFeedbackButton.setEnabled(false);
-
-
-
 
         stimulusImage = (ImageView) findViewById(R.id.stimulus1_image);
 
-        //addPhotoButton.setEnabled(false);
+        addPhotoButton.setEnabled(false);
 
 
-        recordHelpButton = (Button) findViewById(R.id.record_audio_help_button);
         saveButton.setEnabled(false);
-        recordHelpButton.setEnabled(false);
-
         //add listeners for each button
 
         //Record a question
@@ -110,8 +97,15 @@ public class StimulusUploadActivity extends Activity {
                 else
                     nameFilePath = newStimulusFolderPath + "/name" + ".txt";
 
+                String metricsFilePath;
+                if (newStimulusFolderPath.endsWith("/"))
+                    metricsFilePath = newStimulusFolderPath + "metrics" + ".txt";
+                else
+                    metricsFilePath = newStimulusFolderPath + "/metrics" + ".txt";
+
                 Intent i = new Intent(StimulusUploadActivity.this, NameUploadActivity.class);
                 i.putExtra("nameFilePath", nameFilePath);
+                i.putExtra("metricsFilePath", metricsFilePath);
                 startActivity(i);
                 stimulusNameButton.setEnabled(false);
                 recordQuestionButton.setEnabled(true);
@@ -122,8 +116,6 @@ public class StimulusUploadActivity extends Activity {
         recordQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
 
                 String newFilePath;
                 if (newStimulusFolderPath.endsWith("/"))
@@ -140,8 +132,6 @@ public class StimulusUploadActivity extends Activity {
         recordAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20);
@@ -155,6 +145,7 @@ public class StimulusUploadActivity extends Activity {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "YOUR DEVICE DOES NOT SUPPORT SPEECH RECOGNITION", Toast.LENGTH_LONG).show();
                 }
+
             }
         });
 
@@ -207,50 +198,8 @@ public class StimulusUploadActivity extends Activity {
                     }
                 }, 1000);
 
-                recordQuestionButton.setEnabled(true);
+//                recordQuestionButton.setEnabled(true);
 
-            }
-        });
-
-        //Optionally allow user to record an audio message to play if game-player answers correctly.
-        recordCorrectFeedbackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String newFilePath;
-                if (newStimulusFolderPath.endsWith("/"))
-                    newFilePath = newStimulusFolderPath + "correctFeedback" + ".mp3";
-                else
-                    newFilePath = newStimulusFolderPath + "/correctFeedback" + ".mp3";
-                recordAudio(newFilePath, "correctFeedback");
-                recordCorrectFeedbackButton.setEnabled(false);
-            }
-        });
-
-        //Optionally allow user to record an audio message to play if game-player answers incorrectly.
-        recordIncorrectFeedbackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String newFilePath;
-                if (newStimulusFolderPath.endsWith("/"))
-                    newFilePath = newStimulusFolderPath + "incorrectFeedback" + ".mp3";
-                else
-                    newFilePath = newStimulusFolderPath + "/incorrectFeedback" + ".mp3";
-                recordAudio(newFilePath, "incorrectFeedback");
-                recordIncorrectFeedbackButton.setEnabled(false);
-            }
-        });
-
-        //Optionally allow user to record an audio message to play if game-player answers correctly.
-        recordHelpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String newFilePath;
-                if (newStimulusFolderPath.endsWith("/"))
-                    newFilePath = newStimulusFolderPath + "help" + ".mp3";
-                else
-                    newFilePath = newStimulusFolderPath + "/help" + ".mp3";
-                recordAudio(newFilePath, "help");
-                recordHelpButton.setEnabled(false);
             }
         });
 
@@ -405,12 +354,7 @@ public class StimulusUploadActivity extends Activity {
                 } finally {
                     recordQuestionButton.setEnabled(false);
                     recordAnswerButton.setEnabled(false);
-                    recordCorrectFeedbackButton.setEnabled(true);
-                    recordIncorrectFeedbackButton.setEnabled(true);
-
-                    addPhotoButton.setEnabled(false);
-
-                    recordHelpButton.setEnabled(true);
+                    addPhotoButton.setEnabled(true);
                     saveButton.setEnabled(true);
                 }
             }

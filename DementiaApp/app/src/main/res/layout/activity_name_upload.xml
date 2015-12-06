@@ -11,9 +11,10 @@
         android:id="@+id/prompt_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
         android:text="Enter a name for this question (used in stimulus browser):"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:fontFamily="serif"
         android:textStyle="bold"
         android:textColor="#E7BB66"/>
@@ -21,7 +22,9 @@
     <EditText
         android:id="@+id/input_text"
         android:layout_width="fill_parent"
-        android:layout_height="150px"
+        android:layout_marginTop="50dp"
+        android:layout_height="75sp"
+        android:textSize="25sp"
         android:layout_below="@id/prompt_text"
         android:hint="Enter Name Here"
         android:inputType="text"
@@ -29,14 +32,16 @@
 
     <Button
         android:id="@+id/save_button"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_text"
-        android:layout_marginTop="20dp"
         android:text="Save"
-        android:textSize="14sp"
+        android:layout_marginTop="50dp"
+        android:textSize="25sp"
         android:fontFamily="serif"
         android:textStyle="bold"
+        android:padding="20dp"
+        android:layout_centerHorizontal="true"
         android:background="#808080"
         android:textColor="#E7BB66"/>
 
