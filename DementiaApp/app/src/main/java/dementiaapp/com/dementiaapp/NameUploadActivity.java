@@ -31,10 +31,16 @@ public class NameUploadActivity extends Activity {
             public void onClick(View v) {
                 Intent myIntent = getIntent();
                 String filePath = myIntent.getStringExtra("nameFilePath");
+                String metricsFilePath = myIntent.getStringExtra("metricsFilePath");
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filePath)));
                     String name = inputBox.getText().toString();
                     writer.write(name);
+                    writer.close();
+                } catch (IOException e) {}
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(new File(metricsFilePath)));
+                    writer.write("0\n0");
                     writer.close();
                 } catch (IOException e) {}
                 finish();

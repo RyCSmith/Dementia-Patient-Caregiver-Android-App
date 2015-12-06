@@ -3,10 +3,13 @@ package dementiaapp.com.dementiaapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.File;
 
 public class MenuActivity extends Activity {
 
@@ -17,6 +20,13 @@ public class MenuActivity extends Activity {
 
         Button playGameButton = (Button) findViewById(R.id.play_game_button);
         Button logoutButton = (Button) findViewById(R.id.logout_button);
+
+        playGameButton.setEnabled(false);
+        String stimuliMainDir = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+        File file = new File(stimuliMainDir);
+        if(file.exists()) {
+            playGameButton.setEnabled(true);
+        }
 
         playGameButton.setOnClickListener(new View.OnClickListener() {
             @Override

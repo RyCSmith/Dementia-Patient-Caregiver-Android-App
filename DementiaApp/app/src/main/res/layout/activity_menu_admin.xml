@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="150dp"
+    android:paddingTop="75dp"
     android:paddingBottom="16dp"
     android:background="#302F30">
 
@@ -12,16 +12,32 @@
         android:id="@+id/upload_stimulus_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:layout_centerHorizontal="true"
         android:text="Upload Stimulus"
         android:background="#808080"
         android:elegantTextHeight="false"
-        android:padding="10dp"
+
         android:textStyle="bold"
         android:fontFamily="serif"
         android:textSize="35sp"
         android:textColor="#E7BB66"
         android:foreground="#fffd41" />
+
+    <Button
+        android:id="@+id/browserButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stimulus Browser"
+        android:layout_marginTop="75dp"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:background="#808080"
+        android:padding="10dp"
+        android:textColor="#E7BB66"
+        android:textSize="35sp"
+        android:layout_below="@+id/upload_stimulus_button"
+        android:layout_centerHorizontal="true" />
 
 
     <Button
@@ -32,8 +48,8 @@
         android:text="View Metrics"
         android:background="#808080"
         android:elegantTextHeight="false"
-        android:layout_below="@id/upload_stimulus_button"
-        android:layout_marginTop="100dp"
+        android:layout_below="@id/browserButton"
+        android:layout_marginTop="75dp"
         android:padding="10dp"
         android:textStyle="bold"
         android:fontFamily="serif"
@@ -51,18 +67,11 @@
         android:fontFamily="serif"
         android:padding="10dp"
         android:textStyle="bold"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="75dp"
         android:textSize="20sp"
         android:textColor="#E7BB66"
         android:background="#808080" />
 
-    <Button
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Browser"
-        android:id="@+id/browserButton"
-        android:layout_below="@+id/upload_stimulus_button"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

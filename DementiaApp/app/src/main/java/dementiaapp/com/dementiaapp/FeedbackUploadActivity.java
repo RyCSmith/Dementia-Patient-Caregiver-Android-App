@@ -50,6 +50,7 @@ public class FeedbackUploadActivity extends Activity {
 
     private Button recordCorrectFeedbackButton;
     private Button recordIncorrectFeedbackButton;
+    private Button recordHelpButton;
     private Button saveButton;
 
     private String stimuliMainDir;
@@ -73,10 +74,11 @@ public class FeedbackUploadActivity extends Activity {
         //set up all Buttons
         recordCorrectFeedbackButton = (Button) findViewById(R.id.record_right_feedback_button);
         recordIncorrectFeedbackButton = (Button) findViewById(R.id.record_wrong_feedback_button);
+        recordHelpButton = (Button) findViewById(R.id.record_audio_help_button);
         saveButton = (Button) findViewById(R.id.save1_button);
         recordCorrectFeedbackButton.setEnabled(true);
-        recordIncorrectFeedbackButton.setEnabled(true);
-
+        recordIncorrectFeedbackButton.setEnabled(false);
+        recordHelpButton.setEnabled(false);
         //addPhotoButton.setEnabled(false);
 
 
@@ -94,6 +96,7 @@ public class FeedbackUploadActivity extends Activity {
                 newFilePath = newStimulusFolderPath + "correctFB" + ".mp3";
                 recordAudio(newFilePath, "correctFB");
                 recordCorrectFeedbackButton.setEnabled(false);
+                recordIncorrectFeedbackButton.setEnabled(true);
             }
         });
 
@@ -105,6 +108,17 @@ public class FeedbackUploadActivity extends Activity {
                 newFilePath = newStimulusFolderPath + "incorrectFB" + ".mp3";
                 recordAudio(newFilePath, "incorrectFB");
                 recordIncorrectFeedbackButton.setEnabled(false);
+                recordHelpButton.setEnabled(true);
+            }
+        });
+
+        recordHelpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newFilePath;
+                newFilePath = newStimulusFolderPath + "help" + ".mp3";
+                recordAudio(newFilePath, "help");
+                recordHelpButton.setEnabled(false);
                 saveButton.setEnabled(true);
             }
         });

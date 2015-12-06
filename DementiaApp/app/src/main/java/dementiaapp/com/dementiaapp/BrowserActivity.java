@@ -11,8 +11,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import java.io.File;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,16 +42,31 @@ public class BrowserActivity extends Activity {
 
         ArrayList<String> listOfStimuli = new ArrayList<String>();
         ArrayList<File> fileList = new ArrayList<File>();
-        String stimulus = "Stimulus";
+        String stimulus;
         int number = 1;
         int count = 0;
+        int numCorrect = 0;
+        int numAsked = 0;
 
         if (allStimuli.length != 0) {
 
             for (File stimulusFolder : allStimuli) {
                 if (stimulusFolder.isDirectory()) {
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(new File(stimulusFolder + "/name.txt")));
+                        stimulus = br.readLine();
+                        br.close();
+                    } catch (IOException e) {
+                        stimulus = "Stimulus " + number;
+                    }
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(new File(stimulusFolder + "/metrics.txt")));
+                        numCorrect = Integer.parseInt(br.readLine());
+                        numAsked = Integer.parseInt(br.readLine());
+                        br.close();
+                    } catch (IOException e) {}
                     count++;
-                    listOfStimuli.add(stimulus + " " + number);
+                    listOfStimuli.add(stimulus + " " + numCorrect + "/" + numAsked);
                     fileList.add(stimulusFolder);
                     number++;
                 }
@@ -70,8 +88,20 @@ public class BrowserActivity extends Activity {
             // Forth - the Array of data
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, values);
+                    android.R.layout.simple_list_item_1, android.R.id.text1, values){
 
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    View view =super.getView(position, convertView, parent);
+
+                    TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                    textView.setTextColor(Color.parseColor("#E7BB66"));
+                    textView.setTypeface(null, Typeface.BOLD);
+
+                    return view;
+                }
+            };
 
             // Assign adapter to ListView
             listView.setAdapter(adapter);

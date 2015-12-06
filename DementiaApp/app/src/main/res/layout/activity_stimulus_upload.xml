@@ -1,7 +1,3 @@
-<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!-->-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,21 +11,56 @@
         android:id="@+id/audio_stimulus_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:text="Use the buttons below to create a new stimulus:"
         android:textSize="20sp"
+        android:padding="5dp"
+        android:layout_centerHorizontal="true"
         android:fontFamily="serif"
         android:textStyle="bold"
         android:textColor="#E7BB66"/>
 
     <Button
         android:id="@+id/stimulus_name_button"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/audio_stimulus_title"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="Stimulus Name"
-        android:textSize="14sp"
+        android:textSize="20sp"
+        android:padding="20dp"
+        android:layout_centerHorizontal="true"
+        android:background="#808080"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textColor="#E7BB66"/>
+
+    <Button
+        android:id="@+id/record_audio_stimulus_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/stimulus_name_button"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="Record Audio Prompt"
+        android:textSize="20sp"
+        android:fontFamily="serif"
+        android:padding="20dp"
+        android:textStyle="bold"
+        android:background="#808080"
+        android:textColor="#E7BB66"/>
+
+
+    <Button
+        android:id="@+id/record_audio_answer_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/record_audio_stimulus_button"
+        android:layout_marginTop="10dp"
+        android:text="Record Correct Response"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:padding="20dp"
         android:background="#808080"
         android:fontFamily="serif"
         android:textStyle="bold"
@@ -37,12 +68,14 @@
 
     <Button
         android:id="@+id/upload_photo_button"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/stimulus_name_button"
-        android:layout_marginTop="20dp"
+        android:layout_below="@id/record_audio_answer_button"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:layout_centerHorizontal="true"
         android:text="Upload Photo (optional)"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:background="#808080"
         android:fontFamily="serif"
         android:textStyle="bold"
@@ -53,87 +86,64 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/upload_photo_button"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:cropToPadding="true"
-        android:maxHeight="400dp"
+        android:maxHeight="300dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
 
-    <Button
-        android:id="@+id/record_audio_stimulus_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/stimulus1_image"
-        android:layout_marginTop="20dp"
-        android:text="Record Audio Prompt (Question)"
-        android:textSize="14sp"
-        android:fontFamily="serif"
-        android:textStyle="bold"
-        android:background="#808080"
-        android:textColor="#E7BB66"/>
+    <!--<Button-->
+        <!--android:id="@+id/record_correct_audio_answer_button"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/record_audio_answer_button"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:text="Record Feedback for Correct Response (optional)"-->
+        <!--android:textSize="14sp"-->
+        <!--android:background="#808080"-->
+        <!--android:fontFamily="serif"-->
+        <!--android:textStyle="bold"-->
+        <!--android:textColor="#E7BB66"/>-->
 
-    <Button
-        android:id="@+id/record_audio_answer_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/record_audio_stimulus_button"
-        android:layout_marginTop="20dp"
-        android:text="Record Correct Response"
-        android:textSize="14sp"
-        android:background="#808080"
-        android:fontFamily="serif"
-        android:textStyle="bold"
-        android:textColor="#E7BB66"/>
-
-    <Button
-        android:id="@+id/record_correct_audio_answer_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/record_audio_answer_button"
-        android:layout_marginTop="20dp"
-        android:text="Record Feedback for Correct Response (optional)"
-        android:textSize="14sp"
-        android:background="#808080"
-        android:fontFamily="serif"
-        android:textStyle="bold"
-        android:textColor="#E7BB66"/>
-
-    <Button
-        android:id="@+id/record_incorrect_audio_answer_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/record_correct_audio_answer_button"
-        android:layout_marginTop="20dp"
-        android:text="Record Feedback for Incorrect Response (optional)"
-        android:textSize="14sp"
-        android:fontFamily="serif"
-        android:textStyle="bold"
-        android:background="#808080"
-        android:textColor="#E7BB66"/>
+    <!--<Button-->
+        <!--android:id="@+id/record_incorrect_audio_answer_button"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/record_correct_audio_answer_button"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:text="Record Feedback for Incorrect Response (optional)"-->
+        <!--android:textSize="14sp"-->
+        <!--android:fontFamily="serif"-->
+        <!--android:textStyle="bold"-->
+        <!--android:background="#808080"-->
+        <!--android:textColor="#E7BB66"/>-->
 
 
-    <Button
-        android:id="@+id/record_audio_help_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/record_incorrect_audio_answer_button"
-        android:layout_marginTop="20dp"
-        android:text="Record Help"
-        android:textSize="14sp"
-        android:background="#808080"
-        android:fontFamily="serif"
-        android:textStyle="bold"
-        android:textColor="#E7BB66"/>
+    <!--<Button-->
+        <!--android:id="@+id/record_audio_help_button"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/record_incorrect_audio_answer_button"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:text="Record Help"-->
+        <!--android:textSize="14sp"-->
+        <!--android:background="#808080"-->
+        <!--android:fontFamily="serif"-->
+        <!--android:textStyle="bold"-->
+        <!--android:textColor="#E7BB66"/>-->
+
     <Button
         android:id="@+id/save_button"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/record_audio_help_button"
-        android:layout_marginTop="20dp"
-        android:text="Save Stimulus"
-        android:textSize="14sp"
+        android:padding="20dp"
+        android:layout_below="@id/stimulus1_image"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="Save"
+        android:textSize="20sp"
         android:background="#808080"
         android:fontFamily="serif"
         android:textStyle="bold"
@@ -141,16 +151,17 @@
 
     <Button
         android:id="@+id/discard_button"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/save_button"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="Discard"
-        android:textSize="14sp"
+        android:padding="20dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
         android:background="#808080"
         android:fontFamily="serif"
         android:textStyle="bold"
         android:textColor="#E7BB66"/>
 
 </RelativeLayout>
-<!--</ScrollView>-->

@@ -50,6 +50,9 @@ public class ViewMetricsActivity extends Activity {
             FileReader fileReader = new FileReader(filePath);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = bufferedReader.readLine();
+            if(line != null) {
+                line = bufferedReader.readLine();
+            }
             while(line != null) {
                 scores.add(Double.parseDouble(line));
                 line = bufferedReader.readLine();

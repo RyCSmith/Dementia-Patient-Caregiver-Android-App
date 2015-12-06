@@ -17,8 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +41,11 @@ public class GameActivity extends Activity {
     private int currentStimulusIndex;
 
     private String stimuliMainDirPath;
+    private String metricsFilePath;
+    private File metricsFile;
 
     private int currentScore = 0;
+    private int totalAsked = 0;
     String photoPath;
 
     @Override
@@ -59,21 +61,28 @@ public class GameActivity extends Activity {
         score = (TextView) findViewById(R.id.score);
         helpButton = (Button) findViewById(R.id.help_button);
 
-        //stimuliMainDir = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
-
-
-
-        currentScore = 0;
-
         //folder containing all stimulus subfolders
         stimuliMainDirPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
 
-        //We thought about including default audio recordings for correct and incorrect answers, as well as question-specific ones.
-        //They were to reside in this folder.
-        String defaultsFolderPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/defaults/";
-
         File stimuliMainFolder = new File(stimuliMainDirPath);
         File[] allStimuli = stimuliMainFolder.listFiles();
+
+        metricsFilePath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/metrics.txt";
+        metricsFile = new File(metricsFilePath);
+        if(!metricsFile.exists()) {
+            try {
+                metricsFile.createNewFile();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(metricsFile, true));
+                writer.write("Metrics");
+                writer.close();
+            }
+            catch (Exception e) {}
+        }
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(metricsFile, true));
+            writer.write("\n0.0");
+            writer.close();
+        } catch (IOException e) {}
 
         stimulusList = new ArrayList<>();
         if (allStimuli.length != 0) {
@@ -83,50 +92,44 @@ public class GameActivity extends Activity {
                     String fullPath = stimulusFolder.getAbsolutePath();
                     String stimulusName = fullPath.substring(fullPath.lastIndexOf("/stimuli/") + 8);
                     File[] stimulusParts = stimulusFolder.listFiles();
-                    boolean containsIncorrectResponseAudio = false;
-                    boolean containsCorrectResponseAudio = false;
                     boolean containsImage = false;
+                    int numCorrect = 0;
+                    int numAsked = 0;
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(fullPath + "metrics.txt"));
+                        numCorrect = Integer.parseInt(br.readLine());
+                        numAsked = Integer.parseInt(br.readLine());
+                    } catch (IOException e) {}
+
 
                     for (File part : stimulusParts) {
                         if (part.getAbsolutePath().contains("photo")) {
                             containsImage = true;
                             photoPath = part.getAbsolutePath();
                         }
-                        if (part.getAbsolutePath().contains("incorrectFeedback")) {
-                            containsIncorrectResponseAudio = true;
-                        }
-                        if (part.getAbsolutePath().contains("correctFeedback")) {
-                            containsCorrectResponseAudio = true;
-                        }
                     }
 
-                    newStimulus stimulus = new newStimulus(fullPath, defaultsFolderPath, containsImage,
-                            containsIncorrectResponseAudio, containsCorrectResponseAudio);
+                    newStimulus stimulus = new newStimulus(fullPath, containsImage, numCorrect, numAsked);
                     stimulusList.add(stimulus);
-
-                    resetStimulus();
-
-                    //immediately being playing game on launch
-                    displayCurrentStimulus();
                 }
-
-
             }
+            //immediately being playing game on launch
+            displayCurrentStimulus();
         }
-}
+    }
 
     //Invoked either when user responds to a question or touches the skip button and either displays next stimulus
     //or text indicating there are no more stimuli.
     private void changeStimulus() {
-        if (stimulusList == null ) {
-            displayNoMoreStimuli();
-        }
+//        if (stimulusList == null ) {
+//            displayNoMoreStimuli();
+//        }
         if (currentStimulusIndex >= stimulusList.size() - 1)  {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setTitle("Confirm");
-            builder.setMessage("Do you wish to play again?");
+            builder.setMessage("Thanks for playing! Would you like to play again?");
 
             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
@@ -135,6 +138,15 @@ public class GameActivity extends Activity {
 
                     dialog.dismiss();
                     currentStimulusIndex = 0;
+                    currentScore = 0;
+                    totalAsked = 0;
+                    updateScore();
+                    try {
+                        BufferedWriter writer = new BufferedWriter(new FileWriter(metricsFile, true));
+                        writer.write("\n0.0");
+                        writer.close();
+                    } catch (IOException e) {}
+                    displayCurrentStimulus();
                 }
 
             });
@@ -145,7 +157,7 @@ public class GameActivity extends Activity {
                 public void onClick(DialogInterface dialog, int which) {
                     // Do nothing
                     dialog.dismiss();
-                    displayNoMoreStimuli();
+                    finish();
                 }
             });
 
@@ -180,50 +192,43 @@ public class GameActivity extends Activity {
                 for(String response: responses) {
                     if (possibleAnswers.contains(response)) {
                         matchFound = true;
-                        currentScore++;
-                        updateScore();
-
-                        //Tell user the answer was correct, and move onto next stimulus.
-                        if (currentStimulus.hasCustomCorrectResponseAudio()) {
-                            MemAidUtils.playAudio(currentStimulus.getOnCorrectResponseAudio());
-                        } else {
-                            MemAidUtils.playAudio(stimuliMainDirPath+"correctFB.mp3");
-                        }
-                        //Toast.makeText(getApplicationContext(),"YOU GOT THE RIGHT ANSWER! CONGRATS!", Toast.LENGTH_LONG).show();
-                        changeStimulus();
                     }
                 }
-
-                if (!matchFound) {
+                if(!matchFound) {
                     for(String response: responses) {
                         for(String possibility: possibleAnswers) {
                             //Exact match not found--check whether it was close and might be an issue of bad speech to text conversion
                             int minimumEditDistance = getLevenshteinDistance(response, possibility);
-                            if (minimumEditDistance <= 3) {
-                                currentScore++;
-                                updateScore();
-                                if (currentStimulus.hasCustomCorrectResponseAudio()) {
-                                    MemAidUtils.playAudio(currentStimulus.getOnCorrectResponseAudio());
-                                } else {
-                                    MemAidUtils.playAudio(stimuliMainDirPath+"correctFB.mp3");
-                                }
-
-                                //Toast.makeText(getApplicationContext(),"YOU GOT THE RIGHT ANSWER! CONGRATS!", Toast.LENGTH_LONG).show();
-                                Log.d("VISHWA", "MATCH FOUND THROUGH EDIT DISTANCE:" + response + " with " + possibility + " and edit distance = " + minimumEditDistance);
-                                changeStimulus();
+                            if(minimumEditDistance <= 3) {
+                                matchFound = true;
                             }
                         }
                     }
                 }
-
-                //didn't get the right answer--display message and play audio of correct answer
-                if (currentStimulus.hasCustomCorrectResponseAudio()) {
-                    MemAidUtils.playAudio(currentStimulus.getOnIncorrectResponseAudio());
-                } else{
-                    MemAidUtils.playAudio(stimuliMainDirPath+"incorrectFB.mp3");
-                    //MemAidUtils.playAudio(currentStimulus.getCorrectAnswerAsAudio());
+                if(matchFound) {
+                    currentScore++;
+                    currentStimulus.numCorrect++;
+                    try {
+                        BufferedWriter writer = new BufferedWriter(new FileWriter(currentStimulus.getStimulusName() + "/metrics.txt"));
+                        writer.write(currentStimulus.numCorrect + "\n" + currentStimulus.numAsked);
+                        writer.close();
+                    } catch (IOException e) {}
+                    //Tell user the answer was correct, and move onto next stimulus.
+                    MemAidUtils.playAudio(stimuliMainDirPath + "correctFB.mp3");
                 }
-                //Toast.makeText(getApplicationContext(),"TOO BAD, YOU DIDN'T GET THAT ONE RIGHT. BETTER LUCK NEXT TIME!", Toast.LENGTH_LONG).show();
+                else {
+                    //didn't get the right answer--display message and play audio of correct answer
+                    MemAidUtils.playAudio(stimuliMainDirPath + "incorrectFB.mp3");
+                    try {
+                        Thread.sleep(2000);
+                    } catch(InterruptedException e) {}
+                    MemAidUtils.playAudio(currentStimulus.getCorrectAnswerAsAudio());
+                }
+                updateScore();
+                try {
+                    Thread.sleep(3000);
+                } catch(InterruptedException e) {}
+                changeStimulus();
             }
         }
     }
@@ -231,6 +236,29 @@ public class GameActivity extends Activity {
 
     private void updateScore() {
         score.setText(currentScore + "");
+        if(totalAsked != 0) {
+            double percentCorrect = ((currentScore / (double)totalAsked) * 100);
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(metricsFile));
+                String line;
+                String line2;
+                StringBuilder fileContents = new StringBuilder();
+                line = br.readLine();
+                if(line != null) {
+                    line2 = br.readLine();
+                    while(line2 != null) {
+                        fileContents.append(line + "\n");
+                        line = line2;
+                        line2 = br.readLine();
+                    }
+                }
+                br.close();
+                fileContents.append(percentCorrect);
+                BufferedWriter writer = new BufferedWriter(new FileWriter(metricsFile));
+                writer.write(fileContents.toString());
+                writer.close();
+            } catch (IOException e) {}
+        }
     }
 
     //Checks edit distance between two strings, i.e., how many letters would need to be changed to convert one string to another
@@ -294,7 +322,13 @@ public class GameActivity extends Activity {
             }
             stimulusImage.setImageBitmap(stimulusBitmap);
         }
-
+        totalAsked++;
+        currentStimulus.numAsked++;
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(currentStimulus.getStimulusName() + "/metrics.txt"));
+            writer.write(currentStimulus.numCorrect + "\n" + currentStimulus.numAsked);
+            writer.close();
+        } catch (IOException e) {}
         //play audio prompt automatically
         MemAidUtils.playAudio(currentStimulus.getAudioPrompt());
 
@@ -312,7 +346,7 @@ public class GameActivity extends Activity {
             public void onClick(View v) {
                 //showBasicAlertDialog("How to play activity",
                 //      "Click the microphone button and then name the object in the image shown.");
-                MemAidUtils.playAudio(currentStimulus.getHelpAudio());
+                MemAidUtils.playAudio(stimuliMainDirPath + "help.mp3");
             }
         });
 
@@ -334,18 +368,4 @@ public class GameActivity extends Activity {
             }
         });
     }
-
-    //Function to be invoked when user has gone through all stimuli. Currently only displays a text pop-up, but should probably do more.
-    private void displayNoMoreStimuli() {
-        Toast.makeText(getApplicationContext(), "SORRY, THERE ARE NO MORE MEMORY TESTS!", Toast.LENGTH_LONG).show();
-        skipButton.setEnabled(false);
-        micButton.setEnabled(false);
-    }
-
-    public void resetStimulus(){
-        if (!stimulusList.isEmpty()) {
-            currentStimulusIndex = 0;
-        }
-    }
-
 }

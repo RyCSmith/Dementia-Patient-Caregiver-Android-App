@@ -17,6 +17,7 @@ public class MenuActivityAdmin extends Activity {
 
     private String correct;
     private String incorrect;
+    private String help;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,13 @@ public class MenuActivityAdmin extends Activity {
         Button viewMetricsButton = (Button) findViewById(R.id.view_metrics_button);
         Button logoutButton = (Button) findViewById(R.id.logout_button);
 
+        browserButton.setEnabled(false);
+        String stimDir = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+        File file = new File(stimDir);
+        if(file.exists()) {
+            browserButton.setEnabled(true);
+        }
+
         uploadStimulusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,12 +44,14 @@ public class MenuActivityAdmin extends Activity {
 
                 correct = stimuliMainDir + "correctFB.mp3";
                 incorrect = stimuliMainDir + "incorrectFB.mp3";
+                help = stimuliMainDir + "help.mp3";
                 File f = new File(correct);
                 File f2 = new File(incorrect);
+                File f3 = new File(help);
 
                 //intent.setClass(MenuActivityAdmin.this, StimulusUploadActivity.class);
 
-                if (f.exists() && f2.exists()) {
+                if (f.exists() && f2.exists() && f3.exists()) {
                     intent.setClass(MenuActivityAdmin.this, StimulusUploadActivity.class);
                 } else {
                     intent.setClass(MenuActivityAdmin.this, FeedbackUploadActivity.class);
