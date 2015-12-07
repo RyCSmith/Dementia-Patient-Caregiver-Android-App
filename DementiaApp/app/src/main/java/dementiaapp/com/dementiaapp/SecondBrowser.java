@@ -80,19 +80,13 @@ public class SecondBrowser extends Activity {
                     }
                 }
                 playAudio(question);
-////
-                // no need to call prepare(); create() does that for you
             }
         });
-//listenAnswerButton
 
         listenAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 playAudio(answerPath);
-////
-                // no need to call prepare(); create() does that for you
             }
         });
 

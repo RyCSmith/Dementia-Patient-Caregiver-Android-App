@@ -43,8 +43,6 @@ public class MenuActivityAdmin extends Activity {
                 File f2 = new File(incorrect);
                 File f3 = new File(help);
 
-                //intent.setClass(MenuActivityAdmin.this, StimulusUploadActivity.class);
-
                 if (f.exists() && f2.exists() && f3.exists()) {
                     intent.setClass(MenuActivityAdmin.this, StimulusUploadActivity.class);
                 } else {
@@ -83,9 +81,6 @@ public class MenuActivityAdmin extends Activity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent();
-                intent.setClass(MenuActivityAdmin.this, LoginActivity.class);
-                startActivity(intent);*/
                 finish();
             }
         });
@@ -99,11 +94,6 @@ public class MenuActivityAdmin extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
         return super.onOptionsItemSelected(item);
     }
 }

@@ -33,7 +33,6 @@ public class UpdateStimulusActivity extends Activity {
     private Button recordQuestionButton;
     private Button recordAnswerButton;
     private static final int REQUEST_CODE_SPEECH_RECOGNITION = 100;
-//    private File stimulusPathGlobal;
 
     String question = null;
     String answerPath = null;
@@ -174,16 +173,6 @@ public class UpdateStimulusActivity extends Activity {
 
 
     }
-    private void displayPic() {
-//        Bitmap stimulusBitmap;
-//
-//        if (newStimulusFolderPath.endsWith("/"))
-//            stimulusBitmap = BitmapFactory.decodeFile(newStimulusFolderPath + "photo.jpg");
-//        else
-//            stimulusBitmap = BitmapFactory.decodeFile(newStimulusFolderPath + "/photo.jpg");
-//
-//        stimulusImage.setImageBitmap(stimulusBitmap);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -283,9 +272,6 @@ public class UpdateStimulusActivity extends Activity {
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                } finally {
-//                    recordQuestionButton.setEnabled(false);
-//                    recordAnswerButton.setEnabled(false);
                 }
             }
 

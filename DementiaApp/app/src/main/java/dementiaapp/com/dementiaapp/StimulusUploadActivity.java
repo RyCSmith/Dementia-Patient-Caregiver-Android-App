@@ -160,8 +160,6 @@ public class StimulusUploadActivity extends Activity {
                 intent.putExtras(bundle);
                 startActivity(intent);
 
-                String stimuliMainDirPath = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
-
                 addPhotoButton.setEnabled(false);
 
                 Handler handler = new Handler();
@@ -177,7 +175,6 @@ public class StimulusUploadActivity extends Activity {
 
                             public void onClick(DialogInterface dialog, int which) {
                                 // Do nothing but close the dialog
-
                                 dialog.dismiss();
                                 displayPic();
                             }
@@ -197,18 +194,12 @@ public class StimulusUploadActivity extends Activity {
                         alert.show();
                     }
                 }, 1000);
-
-//                recordQuestionButton.setEnabled(true);
-
             }
         });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent();
-                intent.setClass(StimulusUploadActivity.this, MenuActivityAdmin.class);
-                startActivity(intent);*/
                 finish();
             }
         });
@@ -219,9 +210,6 @@ public class StimulusUploadActivity extends Activity {
                 for(File file: new File(newStimulusFolderPath).listFiles())
                     file.delete();
                 new File(newStimulusFolderPath).delete();
-                /*Intent intent = new Intent();
-                intent.setClass(StimulusUploadActivity.this, MenuActivityAdmin.class);
-                startActivity(intent);*/
                 finish();
             }
         });

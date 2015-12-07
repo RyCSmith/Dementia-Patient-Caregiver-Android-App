@@ -74,10 +74,6 @@
             android:label="@string/title_activity_second_browser" >
         </activity>
         <activity
-            android:name=".EditBrowserActivity"
-            android:label="@string/title_activity_edit_browser" >
-        </activity>
-        <activity
             android:name=".ViewBrowserImage"
             android:label="@string/title_activity_view_browser_image" >
         </activity>
