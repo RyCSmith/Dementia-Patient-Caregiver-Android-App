@@ -119,10 +119,6 @@ public class BrowserActivity extends Activity {
                     // ListView Clicked item value
                     String itemValue = (String) listView.getItemAtPosition(position);
 
-                    // Show Alert
-                    Toast.makeText(getApplicationContext(),
-                            "Position :" + realFolders[itemPosition].getPath() + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
-                            .show();
                     // Bring to that particular folder
 //                    realFolders[itemPosition];// THIS IS THE PATH TO THE CLICKED FOLDER.
                     Intent intent = new Intent();

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -28,13 +29,6 @@ public class MenuActivityAdmin extends Activity {
         Button uploadStimulusButton = (Button) findViewById(R.id.upload_stimulus_button);
         Button viewMetricsButton = (Button) findViewById(R.id.view_metrics_button);
         Button logoutButton = (Button) findViewById(R.id.logout_button);
-
-        browserButton.setEnabled(false);
-        String stimDir = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
-        File file = new File(stimDir);
-        if(file.exists()) {
-            browserButton.setEnabled(true);
-        }
 
         uploadStimulusButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +57,17 @@ public class MenuActivityAdmin extends Activity {
         browserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(MenuActivityAdmin.this, BrowserActivity.class);
-                startActivity(intent);
+                String stimDir = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath()).getAbsolutePath() + "/MemAid/stimuli/";
+                File file = new File(stimDir);
+                if(!file.exists()) {
+                    Toast.makeText(getApplicationContext(),
+                            "NO STIMULI EXIST TO VIEW YET", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Intent intent = new Intent();
+                    intent.setClass(MenuActivityAdmin.this, BrowserActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 

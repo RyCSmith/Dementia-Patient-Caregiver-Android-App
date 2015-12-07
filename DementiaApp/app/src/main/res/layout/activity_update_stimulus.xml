@@ -18,7 +18,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CHNAGE QUESTION"
+        android:text="CHANGE QUESTION"
         android:id="@+id/changeQuestionButton"
         android:layout_below="@+id/changePictureButton"
         android:layout_centerHorizontal="true"
@@ -32,4 +32,12 @@
         android:layout_below="@+id/changeQuestionButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="57dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DELETE PICTURE"
+        android:id="@+id/deletePictureButton"
+        android:layout_below="@+id/changePictureButton"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

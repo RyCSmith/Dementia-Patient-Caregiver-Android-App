@@ -114,7 +114,8 @@ public class UploadPhotoWithNameActivity extends Activity {
         if (requestCode == REQUEST_CODE_PHOTO_SELECT) {
             if (resultCode == RESULT_OK) {
                 Uri photoUri = data.getData();
-                handlePhotoCompletion(photoUri);
+                if (photoUri != null)
+                    handlePhotoCompletion(photoUri);
             } else {
                 Toast.makeText(getApplicationContext(), "Sorry, that photo could not be used, please use a different photo.", Toast.LENGTH_LONG).show();
             }

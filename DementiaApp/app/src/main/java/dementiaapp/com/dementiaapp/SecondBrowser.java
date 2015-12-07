@@ -79,9 +79,6 @@ public class SecondBrowser extends Activity {
                         e.printStackTrace();
                     }
                 }
-                Toast.makeText(getApplicationContext(),
-                        "Position :" + question + "  ListItem : ", Toast.LENGTH_LONG)
-                        .show();
                 playAudio(question);
 ////
                 // no need to call prepare(); create() does that for you
@@ -93,9 +90,6 @@ public class SecondBrowser extends Activity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getApplicationContext(),
-                        "Position :" + answerPath + "  ListItem : ", Toast.LENGTH_LONG)
-                        .show();
                 playAudio(answerPath);
 ////
                 // no need to call prepare(); create() does that for you
@@ -109,23 +103,6 @@ public class SecondBrowser extends Activity {
 
             @Override
             public void onClick(View v) {
-//                Toast.makeText(getApplicationContext(),
-//                    "Position :" + imagePath + "  ListItem : ", Toast.LENGTH_LONG)
-//                    .show();
-//                File imgFile = new File(imagePath);
-//                Bitmap stimulusBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-//                ImageView myImage = (ImageView) findViewById(R.id.imageView333);
-//
-//                if (showImage) {
-//                    if (imgFile.exists()) {
-//
-//                        myImage.setImageBitmap(stimulusBitmap);
-//                        showImage = false;
-//                    }
-//                } else {
-//                    myImage.destroyDrawingCache();
-//                    showImage = true;
-//                }
                 if (imagePath == null) {
                     Toast.makeText(getApplicationContext(),
                             "IMAGE DOES NOT EXIST FOR THIS STIMULUS", Toast.LENGTH_LONG).show();
@@ -144,7 +121,9 @@ public class SecondBrowser extends Activity {
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.putExtra("path", stimulusPathGlobal);
+                if (stimulusPathGlobal != null) intent.putExtra("path", stimulusPathGlobal.toString());
+
+
                 intent.setClass(SecondBrowser.this, UpdateStimulusActivity.class);
                 startActivity(intent);
             }
@@ -161,25 +140,6 @@ public class SecondBrowser extends Activity {
                 startActivity(intent);
             }
         });
-
-//        // Long click edit ->
-//        // delete photo
-//        viewImageButton.setOnLongClickListener(new View.OnLongClickListener() {
-//            public boolean onLongClick(View v) {
-//                Toast.makeText(getApplicationContext(), "Long Clicked " ,
-//                        Toast.LENGTH_SHORT).show();
-//
-//                Intent intent = new Intent();
-//                intent.setClass(SecondBrowser.this, UploadPhotoWithNameActivity.class);
-//                Bundle bundle = new Bundle();
-////                bundle.putString("newStimulusFolder", newStimulusFolderPath);
-//                intent.putExtras(bundle);
-//                startActivity(intent);
-//                return true;    // <- set to true
-//            }
-//        });
-//
-
     }
     private void playAudio(String filePath) {
 
