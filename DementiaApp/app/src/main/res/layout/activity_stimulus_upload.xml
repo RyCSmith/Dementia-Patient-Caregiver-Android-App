@@ -94,46 +94,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
 
-    <!--<Button-->
-        <!--android:id="@+id/record_correct_audio_answer_button"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/record_audio_answer_button"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:text="Record Feedback for Correct Response (optional)"-->
-        <!--android:textSize="14sp"-->
-        <!--android:background="#808080"-->
-        <!--android:fontFamily="serif"-->
-        <!--android:textStyle="bold"-->
-        <!--android:textColor="#E7BB66"/>-->
-
-    <!--<Button-->
-        <!--android:id="@+id/record_incorrect_audio_answer_button"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/record_correct_audio_answer_button"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:text="Record Feedback for Incorrect Response (optional)"-->
-        <!--android:textSize="14sp"-->
-        <!--android:fontFamily="serif"-->
-        <!--android:textStyle="bold"-->
-        <!--android:background="#808080"-->
-        <!--android:textColor="#E7BB66"/>-->
-
-
-    <!--<Button-->
-        <!--android:id="@+id/record_audio_help_button"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/record_incorrect_audio_answer_button"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:text="Record Help"-->
-        <!--android:textSize="14sp"-->
-        <!--android:background="#808080"-->
-        <!--android:fontFamily="serif"-->
-        <!--android:textStyle="bold"-->
-        <!--android:textColor="#E7BB66"/>-->
-
     <Button
         android:id="@+id/save_button"
         android:layout_width="wrap_content"

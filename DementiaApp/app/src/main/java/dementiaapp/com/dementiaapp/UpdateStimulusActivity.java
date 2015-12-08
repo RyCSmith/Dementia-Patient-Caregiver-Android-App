@@ -32,6 +32,7 @@ public class UpdateStimulusActivity extends Activity {
     private File stimulusPathGlobal;
     private Button recordQuestionButton;
     private Button recordAnswerButton;
+    private Button backButton;
     private static final int REQUEST_CODE_SPEECH_RECOGNITION = 100;
 
     String question = null;
@@ -59,7 +60,7 @@ public class UpdateStimulusActivity extends Activity {
 
         Button answerButton = (Button) findViewById(R.id.changeAnswerButton);
         Button deleteButton = (Button) findViewById(R.id.deletePictureButton);
-
+        Button backButton = (Button) findViewById(R.id.backButton);
         final Button imageButton = (Button) findViewById(R.id.changePictureButton);
 
 
@@ -170,7 +171,12 @@ public class UpdateStimulusActivity extends Activity {
 
             }
         });
-
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 
