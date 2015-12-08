@@ -22,7 +22,7 @@ public class newStimulus {
     int numCorrect;
     int numAsked;
 
-    public newStimulus(String stimulusName, boolean customImage, int numAsked, int numCorrect) {
+    public newStimulus(String stimulusName, boolean customImage, int numCorrect, int numAsked) {
         if(!stimulusName.endsWith("/")) {
             stimulusName = stimulusName + "/";
         }

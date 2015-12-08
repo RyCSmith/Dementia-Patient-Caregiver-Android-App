@@ -93,14 +93,6 @@ public class GameActivity extends Activity {
                     String stimulusName = fullPath.substring(fullPath.lastIndexOf("/stimuli/") + 8);
                     File[] stimulusParts = stimulusFolder.listFiles();
                     boolean containsImage = false;
-                    int numCorrect = 0;
-                    int numAsked = 0;
-                    try {
-                        BufferedReader br = new BufferedReader(new FileReader(fullPath + "metrics.txt"));
-                        numCorrect = Integer.parseInt(br.readLine());
-                        numAsked = Integer.parseInt(br.readLine());
-                    } catch (IOException e) {}
-
 
                     for (File part : stimulusParts) {
                         if (part.getAbsolutePath().contains("photo")) {
@@ -108,6 +100,15 @@ public class GameActivity extends Activity {
                             photoPath = part.getAbsolutePath();
                         }
                     }
+
+                    int numCorrect = 0;
+                    int numAsked = 0;
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(fullPath + "/metrics.txt"));
+                        numCorrect = Integer.parseInt(br.readLine());
+                        numAsked = Integer.parseInt(br.readLine());
+                        br.close();
+                    } catch (IOException e) {}
 
                     newStimulus stimulus = new newStimulus(fullPath, containsImage, numCorrect, numAsked);
                     stimulusList.add(stimulus);
@@ -192,6 +193,7 @@ public class GameActivity extends Activity {
                 for(String response: responses) {
                     if (possibleAnswers.contains(response)) {
                         matchFound = true;
+                        break;
                     }
                 }
                 if(!matchFound) {
@@ -201,6 +203,7 @@ public class GameActivity extends Activity {
                             int minimumEditDistance = getLevenshteinDistance(response, possibility);
                             if(minimumEditDistance <= 3) {
                                 matchFound = true;
+                                break;
                             }
                         }
                     }
@@ -212,7 +215,10 @@ public class GameActivity extends Activity {
                         BufferedWriter writer = new BufferedWriter(new FileWriter(currentStimulus.getStimulusName() + "/metrics.txt"));
                         writer.write(currentStimulus.numCorrect + "\n" + currentStimulus.numAsked);
                         writer.close();
-                    } catch (IOException e) {}
+                    } catch (IOException e) {
+                        MemAidUtils.playAudio(stimuliMainDirPath + "help.mp3");
+                    }
+
                     //Tell user the answer was correct, and move onto next stimulus.
                     MemAidUtils.playAudio(stimuliMainDirPath + "correctFB.mp3");
                 }
