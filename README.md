@@ -1,6 +1,6 @@
 Dementia-Patient-Caregiver App
 
-Overview: Android Phone/Tablet application providing flash-card style stimulus creation and practice as well as metric gathering for patients with dementia.
+Overview: Android Phone/Tablet application providing flash-card style stimulus creation and practice as well as metric gathering for patients with dementia. (For full information please see included documentation.)
 
 Design: This project was completed by Ryan Smith, Kelley Loder, Josh Kessler, Joo Kim and Krishna Chaitanya. It was submitted as a group project for CIS-573, Software Engineering at the University of Pennsylvania.
 
